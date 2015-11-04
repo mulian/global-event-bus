@@ -1,5 +1,8 @@
 DEBUG=on
 
+require './emitter'
+
+
 module.exports =
 class EventBus
   constructor:  ->
@@ -47,7 +50,8 @@ class EventBus
         return delete @channels[channel]
       else return false
     if channel? and callback?
-      @channels[channel] =
+      @channels[channel] = [] if not @channels[channel]?
+      @channels[channel].shift {} =
         function: callback
         thisArg: thisArg
         callOnReady: callOnReady
@@ -56,11 +60,12 @@ class EventBus
     else return null
 
   emit: (channel,args...) ->
-    run = @channels[channel]
+    runArr = @channels[channel]
     call = ->
-      run.function.apply run.thisArg, args
-    if run?
-      if @_callReadyQue==off or not run.callOnReady
+      for run in runArr
+        run.function.apply run.thisArg, args
+    if runArr? and runArr.lenght>0
+      if @_callReadyQue==off or not runArr.callOnReady
         call()
       else
         @_callReadyQue.push call
