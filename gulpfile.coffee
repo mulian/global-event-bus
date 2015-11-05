@@ -51,7 +51,7 @@ gulp.task 'coffee_lint', ->
 # Compile Coffee->JS with sourcemap and browserify
 gulp.task 'coffee_browserify', ->
   browserify {} =
-      entries: ["./src/global-eventbus.coffee"],
+      entries: ["./src/test.coffee"],
       debug: true,
       extensions: [".coffee"],
       transform: ["coffeeify"] # npm install --save-dev coffeeify

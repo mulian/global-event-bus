@@ -52,7 +52,7 @@
 
   gulp.task('coffee_browserify', function() {
     return browserify({
-      entries: ["./src/global-eventbus.coffee"],
+      entries: ["./src/test.coffee"],
       debug: true,
       extensions: [".coffee"],
       transform: ["coffeeify"]
