@@ -4,7 +4,7 @@ class EventBus
   constructor: ->
     @_toGlobal()
     @emitObj = {}
-    @debug = false
+    @debug = off
 
   _toGlobal: ->
     global.e = @call
@@ -14,7 +14,9 @@ class EventBus
     switch args[0]
       when undefined then return @emitObj
       when 'on' then return @on
-      when 'debug' then @debug = args[1]
+      when 'debug'
+        @debug = args[1]
+        return @call
 
   # * channel {String} : Channel name
   # * arg could be ...
@@ -37,11 +39,10 @@ class EventBus
         for key,val of arg
           if val instanceof Function
             delete obj[key]
-    # console.log @emitObj
-  # removeOn: (channel,arg) ->
-  #
-  #   return ->
+    else
+      console.log "error eb.on!" if @debug
 
+  #Create
   createChannel: (channel) ->
     obj = @emitObj
     re = /^([\w$_]+)\./
@@ -54,6 +55,7 @@ class EventBus
       obj: obj
       name: channel
 
+  #Emit channel?
   emit: (channel) ->
 
 new EventBus()
