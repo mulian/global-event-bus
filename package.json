@@ -1,6 +1,6 @@
 {
-  "name": "global-eventbus",
-  "main": "./lib/global-eventbus",
+  "name": "e-bus",
+  "main": "./lib/eventbus",
   "version": "0.0.1",
   "description": "Global eventbus, for node and web.",
   "keywords": [
