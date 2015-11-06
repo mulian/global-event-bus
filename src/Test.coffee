@@ -10,29 +10,33 @@ class Test
     catch e
       console.log "jo test() geht nicht mehr"
     @test2()
-    @rm2()
+    # @rm2()
     try
       @test2() # null, on debug -> Error
     catch e
       console.log "jo test2() geht nicht mehr"
 
   reqEventBus: ->
-    e('debug',true) # turn debug on
-    @rm1 = e('on',{thisArg:@})('Test.xy.z.a.sayHello',@sayHallo)
+    eb('debug',true) # turn debug on
+    @rm1 = eb('on',{thisArg:@})('Test.xy.z.a.sayHello',@sayHallo)
     #and
-    @rm2 = e('on') 'Test.xy.z', {} =
-      eb:
-        thisArg: @
+    @rm2 = eb('on',{thisArg:@}) 'Test.xy.z', {} =
       'sayTest1' : @sayTest1
       'sayTest2' : @sayTest2
 
+    @rm3 = eb('on',{thisArg:@})('Test.html.sayHello',@sayHallo)
+
+  o:
+    thisArg: @
+    onReady: true
+
   test: ->
-    console.log e()
-    e().Test.xy.z.a.sayHello('-test-')
+    # console.log eb()
+    eb(@o).Test.xy.z.a.sayHello '-test-'
 
   test2: ->
-    e().Test.xy.z.sayTest1()
-    e().Test.xy.z.sayTest2('LÄUFT')
+    eb({thisArg:@}).Test.xy.z.sayTest1()
+    eb().Test.xy.z.sayTest2('LÄUFT')
 
   sayHallo: (arg) ->
     console.log "Hallo #{arg}"
