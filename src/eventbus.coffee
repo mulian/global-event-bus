@@ -91,9 +91,10 @@ class EventBus
     return (args...) =>
       {thisArg,onReady} = @emit_option if @_isOption @emit_option
       if @_callReadyQue==false or not onReady
+        console.log "run function with",@ if @debug
         func.apply thisArg,args
       else #add to @_callReadyQue
-        console.log "add to que"
+        console.log "add run function to que with",@  if @debug
         @_callReadyQue.push ->
           func.apply thisArg,args
 

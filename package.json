@@ -34,6 +34,7 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "scripts": {
-    "docco": "docco ./src/*.coffee"
+    "docco": "docco ./src/*.coffee",
+    "test" : "jasmine spec/define-spec"
   }
 }
