@@ -15,4 +15,6 @@ var f = function(arg) {
 eb('on')('Test.sayHallo',f);
 //...
 eb().Test.sayHello('there') //prints: hello there
+// OR use
+eb.emit.Test.sayHello('there') //prints: hello there
 ```

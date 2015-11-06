@@ -3,7 +3,7 @@ module.exports =
 class EventBus
   constructor: ->
     @_toGlobal()
-    @emitObj = {}
+    @emit = {}
     @debug = off
     @_callReadyQue= []
     @_documentReady @_callReady
@@ -44,7 +44,7 @@ class EventBus
       return @rm
 
   rm: (domain) =>
-    obj = @emitObj
+    obj = @emit
     re = /^([\w$_]+)\./
     while sub=re.exec domain
       next = sub[1]
@@ -54,7 +54,7 @@ class EventBus
 
   getEmitObj: (option) ->
     @emit_option = option
-    return @emitObj
+    return @emit
 
   # * channel {String} : Channel name
   # * arg could be ...
@@ -99,7 +99,7 @@ class EventBus
 
   #Create
   createChannel: (channel) ->
-    obj = @emitObj
+    obj = @emit
     re = /^([\w$_]+)\./
     while sub=re.exec channel
       next = sub[1]
