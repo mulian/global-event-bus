@@ -3,16 +3,16 @@ Awesome eventbus for Javascript Web/Node.
 
 # Install
 TODO: add to npm
-`npm install eb`
+`npm install e-bus`
 ## Examples
 ```javascript
-Eventbus = require('eventbus');
+require('e-bus');
 
-var f = function() {
-  console.log("hello");
+var f = function(arg) {
+  console.log("hello "+arg);
 }
 
 eb('on')('Test.sayHallo',f);
 //...
-eb().Test.sayHello() //prints: hello
+eb().Test.sayHello('there') //prints: hello there
 ```
