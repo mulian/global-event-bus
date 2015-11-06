@@ -10,7 +10,8 @@ class EventBus
     return @call
 
   _toGlobal: ->
-    global.eb = @call
+    if not global.eb?
+      global.eb = @call
 
   _documentReady: (callback) ->
     if document?
@@ -39,6 +40,17 @@ class EventBus
     else if args[0] == 'debug'
       @debug = args[1]
       return @call
+    else if args[0] == 'rm'
+      return @rm
+
+  rm: (domain) =>
+    obj = @emitObj
+    re = /^([\w$_]+)\./
+    while sub=re.exec domain
+      next = sub[1]
+      obj = obj[next]
+      domain = domain.substring (next.length+1),domain.length
+    delete obj[domain]
 
   getEmitObj: (option) ->
     @emit_option = option
@@ -97,8 +109,5 @@ class EventBus
     return {} =
       obj: obj
       name: channel
-
-  #Emit channel?
-  emit: (channel) ->
 
 new EventBus()

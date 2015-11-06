@@ -1,4 +1,4 @@
-require './eventbus'
+Eventbus = require './eventbus'
 
 class Test
   constructor: ->
@@ -15,6 +15,8 @@ class Test
       @test2() # null, on debug -> Error
     catch e
       console.log "jo test2() geht nicht mehr"
+    console.log "RM:"
+    eb('rm') 'Test.xy'
 
   reqEventBus: ->
     eb('debug',true) # turn debug on

@@ -1,4 +1,4 @@
-require('../lib/eventbus');
+Eventbus = require('../lib/eventbus');
 
 describe("Will define", function() {
   it("simple add/rm", function() {
@@ -45,5 +45,27 @@ describe("Will define", function() {
     expect(eb().Test.test1 instanceof Function).toBe(true);
     rm(); rm2();
     expect(eb().Test.test1 instanceof Function).toBe(false);
+  });
+  it("rm domain", function() {
+    var func = function() {
+      return "hello"
+    }
+    // var newObj = new obj()
+    var rm = eb('on')('Test.test1',func);
+    expect(eb().Test.test1()).toBe('hello');
+    expect(eb().Test instanceof Object).toBe(true);
+    eb('rm')('Test');
+    expect(eb().Test).toBe(undefined);
+    expect(eb().Test instanceof Object).toBe(false);
+  });
+  it("require eventbus again", function() {
+    var func = function() {
+      return "hello"
+    }
+    // var newObj = new obj()
+    var rm = eb('on')('Test.test1',func);
+    expect(eb().Test.test1()).toBe('hello');
+    new Eventbus();
+    expect(eb().Test.test1()).toBe('hello');
   });
 });
