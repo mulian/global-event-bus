@@ -36,6 +36,7 @@ class EventObject
     return @
 
   _setOption: (options) ->
+    console.log @func
     for key,opt of options
       if key=='thisArg'
         @thisArg = opt
