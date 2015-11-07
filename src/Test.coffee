@@ -16,14 +16,15 @@ class Test
     catch e
       console.log "jo test2() geht nicht mehr"
     console.log "RM:"
-    eb.ebRemove 'Test.xy'
+    # eb.ebRemove 'Test.xy'
 
 
   reqEventBus: ->
     eb.debug=true
+    @rm1 = eb.ebAdd 'Test.xy.z.a.test'
     @rm1 = eb.ebAdd 'Test.xy.z.a.sayHello',@sayHallo
     #and
-    @rm2 = eb.ebAdd 'Test.xy.z', {} =
+    @rm2 = eb.ebAdd 'Test.xy.z.b', {} =
       thisArg:@
       'sayTest1' : @sayTest1
       'sayTest2' : @sayTest2
@@ -42,8 +43,8 @@ class Test
     eb.Test.xy.z.a.ebAdd(@o).sayHello '-test-'
 
   test2: ->
-    eb.Test.xy.z.ebAdd({thisArg:@}).sayTest1()
-    eb.Test.xy.z.sayTest2('LÄUFT')
+    eb.Test.xy.z.b.ebAdd({thisArg:@}).sayTest1()
+    eb.Test.xy.z.b.sayTest2('LÄUFT')
 
   sayHallo: (arg) ->
     console.log "Hallo #{arg}"

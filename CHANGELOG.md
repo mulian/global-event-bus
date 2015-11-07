@@ -1,3 +1,7 @@
+## 0.2.0 - new Syntax
+* use new Syntax
+* update tests
+
 ## 0.1.0 - add features
 * add 'test-case:run' to camel case 'TestCase.run'
 

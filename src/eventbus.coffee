@@ -28,7 +28,7 @@ class EventBus extends EventObject
 
   _replaceToCamelCase: (channel) ->
     #First char to upper
-    channel = "#{channel.charAt(0).toUpperCase()}#{channel.substring 1,channel.length}"
+    # channel = "#{channel.charAt(0).toUpperCase()}#{channel.substring 1,channel.length}"
     #replace all -\w with - uppercase w
     channel = channel.replace /-\w/g, (match,pos) ->
       return match.charAt(1).toUpperCase()

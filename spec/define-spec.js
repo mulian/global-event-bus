@@ -5,29 +5,25 @@ describe("Will define", function() {
     var func = function() {
       return 'works'
     }
-    var rm = eb('on')('Test',func);
-    expect(eb().Test()).toBe('works');
-    expect(eb().Test instanceof Function).toBe(true);
-    rm();
-    expect(eb().Test instanceof Function).toBe(false);
+    eb.ebAdd('test', func);
+    expect(eb.test()).toBe('works');
+    expect(eb.test instanceof Function).toBe(true);
   });
 
   it("with thisArg add/rm", function() {
+    eb.debug=true;
     var obj = {
       attribute: 'test',
       call: function() {
         return this.attribute;
       },
-    }
+    };
     // var newObj = new obj()
-    var rm = eb('on',{thisArg:obj})('Test.test1',obj.call);
-    var rm2 = eb('on')('Test.test2',obj.call);
-    expect(eb().Test.test1()).toBe('test');
-    expect(eb().Test.test2()).toBe(undefined);
-
-    expect(eb().Test.test1 instanceof Function).toBe(true);
-    rm(); rm2();
-    expect(eb().Test.test1 instanceof Function).toBe(false);
+    eb.ebAdd({thisArg:obj},'test.test1', obj.call);
+    eb.ebAdd('test2.test2',obj.call);
+    expect(eb.test.test1()).toBe('test');
+    expect(eb.test2.test2()).toBe(undefined);
+    eb.debug=false;
   });
   it("add/rm with thisArg on call", function() {
     var obj = {
@@ -37,43 +33,39 @@ describe("Will define", function() {
       },
     }
     // var newObj = new obj()
-    var rm = eb('on')('Test.test1',obj.call);
-    var rm2 = eb('on')('Test.test2',obj.call);
-    expect(eb({thisArg:obj}).Test.test1()).toBe('test');
-    expect(eb().Test.test2()).toBe(undefined);
-
-    expect(eb().Test.test1 instanceof Function).toBe(true);
-    rm(); rm2();
-    expect(eb().Test.test1 instanceof Function).toBe(false);
+    eb.ebAdd('test.test1',obj.call);
+    eb.ebAdd('test.test2',obj.call);
+    expect(eb.test.ebAdd({thisArg:obj}).test1()).toBe('test');
+    expect(eb.test.test2()).toBe(undefined);
   });
   it("rm domain", function() {
     var func = function() {
       return "hello"
     }
     // var newObj = new obj()
-    var rm = eb('on')('Test.test1',func);
-    expect(eb().Test.test1()).toBe('hello');
-    expect(eb().Test instanceof Object).toBe(true);
-    eb('rm')('Test');
-    expect(eb().Test).toBe(undefined);
-    expect(eb().Test instanceof Object).toBe(false);
+    eb.ebAdd('test.test1', func);
+    expect(eb.test.test1()).toBe('hello');
+    expect(eb.test instanceof Object).toBe(true);
+    eb.ebRemove('test');
+    expect(eb.test.test1).toBe(undefined);
+    expect(eb.test instanceof Object).toBe(true);
   });
   it("require eventbus again", function() {
     var func = function() {
       return "hello"
     }
     // var newObj = new obj()
-    var rm = eb('on')('Test.test1',func);
-    expect(eb().Test.test1()).toBe('hello');
+    eb.ebAdd('test.test1', func);
+    expect(eb.test.test1()).toBe('hello');
     new Eventbus();
-    expect(eb().Test.test1()).toBe('hello');
+    expect(eb.test.test1()).toBe('hello');
   });
-  it("Use other notation", function() {
-    var func = function() {
-      return "str"
-    }
-    // var newObj = new obj()
-    var rm = eb('on')('test-case:test-test10',func);
-    expect(eb().TestCase.testTest10()).toBe('str');
-  });
+  // it("Use other notation", function() {
+  //   var func = function() {
+  //     return "str"
+  //   }
+  //   // var newObj = new obj()
+  //   var rm = eb('on')('test-case:test-test10',func);
+  //   expect(eb.TestCase.testTest10()).toBe('str');
+  // });
 });
