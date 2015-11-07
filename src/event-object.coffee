@@ -19,7 +19,7 @@ class EventObject
       delete @[key] if obj instanceof EventObject or obj instanceof Function
 
 
-  ebAdd: (arg1,arg2,arg3) ->
+  ebAdd: (arg1,arg2,arg3) =>
     sortArgs = eb._defineArg arg1,arg2,arg3
     console.log "ebAdd:",sortArgs if eb.debug
     {func,domain,option} = sortArgs
