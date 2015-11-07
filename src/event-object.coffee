@@ -73,6 +73,7 @@ class EventObject
     while sub=re.exec channel
       next = sub[1]
       if not obj[next]? #if not (obj[next] instanceof EventObject)
+        console.log obj[next]
         obj[next] = new EventObject()
         console.log "create obj[#{next}]: ",obj
       obj = obj[next]
