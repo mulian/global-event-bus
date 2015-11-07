@@ -80,7 +80,7 @@ class EventObject
         console.log "create obj[#{next}]: ",obj if eb.debug
       obj = obj[next]
       channel = channel.substring (sub[1].length+1),channel.length
-    if withSub
+    if withSub and not obj[channel]?
       obj = obj[channel] = new EventObject()
       console.log "and create obj[#{channel}]: ",obj if eb.debug
       channel = undefined
