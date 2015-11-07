@@ -4,7 +4,7 @@ class Test
   constructor: ->
     @reqEventBus()
     @test() # how "Hallo"
-    # @rm1() #kills sayHallo
+    @rm1() #kills sayHallo
     try
       @test() # null, on debug -> Error
     catch e
@@ -16,34 +16,30 @@ class Test
     catch e
       console.log "jo test2() geht nicht mehr"
     console.log "RM:"
-    eb.ebRemove 'Test.xy'
-
+    eb('rm') 'Test.xy'
 
   reqEventBus: ->
-    eb.debug=true
-    @rm1 = eb.ebAdd 'Test.xy.z.a.sayHello',@sayHallo
+    eb('debug',true) # turn debug on
+    @rm1 = eb('on',{thisArg:@})('Test.xy.z.a.sayHello',@sayHallo)
     #and
-    @rm2 = eb.ebAdd 'Test.xy.z', {} =
-      thisArg:@
+    @rm2 = eb('on',{thisArg:@}) 'Test.xy.z', {} =
       'sayTest1' : @sayTest1
       'sayTest2' : @sayTest2
 
-    @rm3 = eb.ebAdd {thisArg:@},'Test.html.sayHello',@sayHallo
-    @rm4 = eb.ebAdd {thisArg:@},'test-case:html-sayHello:asd',@sayHallo
-    console.log eb
+    @rm3 = eb('on',{thisArg:@})('Test.html.sayHello',@sayHallo)
+    @rm4 = eb('on',{thisArg:@})('test-case:html-sayHello:asd',@sayHallo)
 
   o:
     thisArg: @
     onReady: true
-    once:true
 
   test: ->
     # console.log eb()
-    eb.Test.xy.z.a.ebAdd(@o).sayHello '-test-'
+    eb(@o).Test.xy.z.a.sayHello '-test-'
 
   test2: ->
-    eb.Test.xy.z.ebAdd({thisArg:@}).sayTest1()
-    eb.Test.xy.z.sayTest2('LÄUFT')
+    eb({thisArg:@}).Test.xy.z.sayTest1()
+    eb().Test.xy.z.sayTest2('LÄUFT')
 
   sayHallo: (arg) ->
     console.log "Hallo #{arg}"

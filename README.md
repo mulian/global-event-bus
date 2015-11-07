@@ -6,28 +6,18 @@ TODO: add to npm
 `npm install e-bus`
 ## Examples
 ```javascript
-require('e-bus');
+  require('e-bus');
 
-var f = function(arg) {
-  console.log("hello "+arg);
-}
-
-eb('on')('TestCase.sayHello',f); //camel case
-eb('on')('test-case:say-hello2',f);
-//...
-eb().Test.sayHello('there') //prints: hello there
-// OR use
-eb.emit.TestCase.sayHello2('there') //prints: hello there
-```
-
-```javascript
+  var f = function(arg) {
+    console.log("hello "+arg);
+  }
   eb.debug=true;
   var testCaseEB = eb.ebAdd('testCase.firstCase'); //reg. domain
   eb.testCase.ebAdd('test',f);
   eb.testCase.thisArg = blubb;
   //OR
 
-  // * parameter {Object}: adds Option to Domain
+  // * parameter {Object}: adds Option to Domain and functions
   // * parameter {String}: define the Domain
   // * parameter {Function}: adds function to Domain.methode
   //
@@ -60,7 +50,4 @@ eb.emit.TestCase.sayHello2('there') //prints: hello there
 
   //Remove testCase Domain
   eb.ebRemove('testCase');
-
-  // Impossible?
-  eb.ebRemove()
 ```
