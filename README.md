@@ -26,6 +26,14 @@ eb.emit.TestCase.sayHello2('there') //prints: hello there
   eb.testCase.add('test',f);
   eb.testCase.thisArg = blubb;
   //OR
+  // * parameter {Object}: adds Option to Domain
+  // * parameter {String}: define the Domain
+  // * parameter {Function}: adds function to Domain.methode
+  //
+  // without String: adds to current domain
+  // without function: adds only the domain
+  // Only Object: adds option to current domain
+  // return: {Object} : current Domain
   eb.add('testCase.firstCase.test',f,{thisArg:blubb});
 
   testCaseEB.add('test',f); // -> ev.testCase.firstCase.test()
@@ -37,4 +45,12 @@ eb.emit.TestCase.sayHello2('there') //prints: hello there
   });
 
   eb.testCase.test('bla')
+
+  //Use options once 2. parameter: only once
+  eb.testCase.add({thisArg:obj,once:true}).test('bla')
+
+  //Add option permanent to domain testCase und above
+  eb.testCase.add({thisArg:obj}).test('bla')
+  //Adds option permanent to domain testCase.firstCase (before there was prev addOption)
+  eb.testCase.firstCase.add({thisArg:obj}).test('bla')
 ```
