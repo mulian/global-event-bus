@@ -50,6 +50,7 @@ class EventObject
   #     call.apply thisArg,args
 
   _addFunction: (domain,func) =>
+    console.log "_addFunction #{domain}" if eb.debug
     @func[domain] = [] if not @func[domain]?
     @func[domain].push func
     thisArg = @thisArg
