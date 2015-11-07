@@ -3,6 +3,7 @@ EventObject = require './event-object'
 module.exports =
 class EventBus extends EventObject
   constructor: ->
+    super
     @_toGlobal()
 
   _toGlobal: ->

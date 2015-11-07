@@ -31,6 +31,12 @@ class Test
 
     @rm3 = eb.ebAdd {thisArg:@},'Test.html.sayHello',@sayHallo
     @rm4 = eb.ebAdd {thisArg:@},'test-case:html-sayHello:asd',@sayHallo
+
+    eb.ebAdd 'damn',@test
+    eb.ebAdd 'damn',@sayHallo
+    console.log "----"
+    eb.damn()
+    console.log "----"
     console.log eb
 
   o:

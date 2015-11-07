@@ -1,5 +1,7 @@
 module.exports =
 class EventObject
+  constructor: ->
+    @func = {}
   ebRemove: (domain) ->
     currentObj = @
     if domain?
@@ -47,9 +49,19 @@ class EventObject
   #   return (args...) ->
   #     call.apply thisArg,args
 
-  _addFunction: (domain,func) ->
-    @[domain] =  (args...) ->
-      func.apply @thisArg,args
+  _addFunction: (domain,func) =>
+    @func[domain] = [] if not @func[domain]?
+    @func[domain].push func
+    thisArg = @thisArg
+    if not @[domain]?
+      @[domain] = (args...) ->
+        for f in @func[domain]
+          f.apply thisArg,args
+    # @func[domain] = [] if not @func[domain]?
+    # @func[domain].push func
+    # @[domain] = (args...) ->
+    #   for func in @func[domain]
+    #     func.apply @[domain].thisArg,args
 
   #Create
   _createDomain: (channel,withSub=false) ->
