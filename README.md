@@ -12,9 +12,10 @@ var f = function(arg) {
   console.log("hello "+arg);
 }
 
-eb('on')('Test.sayHallo',f);
+eb('on')('TestCase.sayHello',f); //camel case
+eb('on')('test-case.say-hello2',f);
 //...
 eb().Test.sayHello('there') //prints: hello there
 // OR use
-eb.emit.Test.sayHello('there') //prints: hello there
+eb.emit.TestCase.sayHello2('there') //prints: hello there
 ```

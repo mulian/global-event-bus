@@ -66,28 +66,28 @@ class EventBus
       chan = @createChannel channel
       if arg instanceof Function
         # console.log chan
-        @onFunction chan,arg,thisArg,onReady
+        @_onFunction chan,arg,thisArg,onReady
       else if arg instanceof Object
-        @onObject chan,arg,thisArg,onReady
+        @_onObject chan,arg,thisArg,onReady
       else
         console.log "error eb.on!" if @debug
-  onFunction: (chan,func,thisArg,onReady) ->
-    chan.obj[chan.name] = @createFunction(func,thisArg,onReady)
+  _onFunction: (chan,func,thisArg,onReady) ->
+    chan.obj[chan.name] = @_createFunction(func,thisArg,onReady)
     return ->
       delete chan.obj[chan.name]
-  onObject: (chan,functions,thisArg,onReady) ->
+  _onObject: (chan,functions,thisArg,onReady) ->
     chan.obj[chan.name] = {} if not chan.obj[chan.name]?
     obj = chan.obj[chan.name]
     for key,val of functions
       if val instanceof Function
-        obj[key] = @createFunction(val,thisArg,onReady)
+        obj[key] = @_createFunction(val,thisArg,onReady)
     return ->
       for key,val of obj
         if val instanceof Function
           delete obj[key]
 
   #Return a function and reads the possible emit Option
-  createFunction: (func,thisArg,onReady) ->
+  _createFunction: (func,thisArg,onReady) ->
     return (args...) =>
       {thisArg,onReady} = @emit_option if @_isOption @emit_option
       if @_callReadyQue==false or not onReady
@@ -100,6 +100,8 @@ class EventBus
 
   #Create
   createChannel: (channel) ->
+    channel = @_replaceToCamelCase(channel)
+
     obj = @emit
     re = /^([\w$_]+)\./
     while sub=re.exec channel
@@ -110,5 +112,15 @@ class EventBus
     return {} =
       obj: obj
       name: channel
+  _replaceToCamelCase: (channel) ->
+    #First char to upper
+    channel = "#{channel.charAt(0).toUpperCase()}#{channel.substring 1,channel.length}"
+    #replace all -\w with - uppercase w
+    channel = channel.replace /-\w/g, (match,pos) ->
+      return match.charAt(1).toUpperCase()
+    #replace : to .
+    channel = channel.replace /:/g, '.'
+    return channel
+
 
 new EventBus()

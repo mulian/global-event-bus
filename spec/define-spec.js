@@ -68,4 +68,12 @@ describe("Will define", function() {
     new Eventbus();
     expect(eb().Test.test1()).toBe('hello');
   });
+  it("Use other notation", function() {
+    var func = function() {
+      return "str"
+    }
+    // var newObj = new obj()
+    var rm = eb('on')('test-case:test-test10',func);
+    expect(eb().TestCase.testTest10()).toBe('str');
+  });
 });

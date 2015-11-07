@@ -27,6 +27,7 @@ class Test
       'sayTest2' : @sayTest2
 
     @rm3 = eb('on',{thisArg:@})('Test.html.sayHello',@sayHallo)
+    @rm4 = eb('on',{thisArg:@})('test-case:html-sayHello:asd',@sayHallo)
 
   o:
     thisArg: @
