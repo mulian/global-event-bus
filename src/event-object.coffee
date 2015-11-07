@@ -49,9 +49,9 @@ class EventObject
   #   return (args...) ->
   #     call.apply thisArg,args
 
-  _addFunction: (domain,func) =>
+  _addFunction: (domain,func) ->
     console.log "_addFunction #{domain}" if eb.debug
-    if @func[domain]==undefined
+    if not @func[domain]?
       @func[domain] = []
       console.log "createFunctionArray #{domain}"
     @func[domain].push func
