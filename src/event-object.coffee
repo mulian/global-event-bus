@@ -72,9 +72,10 @@ class EventObject
     re = /^([\w$_]+)\./
     while sub=re.exec channel
       next = sub[1]
-      obj[next] = new EventObject() if not obj[next]? #if not (obj[next] instanceof EventObject)
+      if not obj[next]? #if not (obj[next] instanceof EventObject)
+        obj[next] = new EventObject()
+        console.log "create obj[#{next}]: ",obj
       obj = obj[next]
-      console.log "create obj[#{next}]: ",obj
       channel = channel.substring (sub[1].length+1),channel.length
     if withSub
       obj = obj[channel] = new EventObject()
