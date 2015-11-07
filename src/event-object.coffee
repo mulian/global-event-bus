@@ -82,8 +82,9 @@ class EventObject
       channel = channel.substring (sub[1].length+1),channel.length
     if withSub
       if not obj[channel]?
-        obj = obj[channel] = new EventObject()
+        obj[channel] = new EventObject()
         console.log "and create obj[#{channel}]: ",obj if eb.debug
+      obj = obj[channel]
       channel = undefined
     console.log eb if eb.debug
     rObj = {} =
