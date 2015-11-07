@@ -36,7 +36,7 @@ class EventObject
     return @
 
   _setOption: (options) ->
-    console.log @func
+    console.log @func if eb.debug
     for key,opt of options
       if key=='thisArg'
         @thisArg = opt
@@ -54,7 +54,7 @@ class EventObject
     console.log "_addFunction #{domain}" if eb.debug
     if not @func[domain]?
       @func[domain] = []
-      console.log "createFunctionArray #{domain}"
+      console.log "createFunctionArray #{domain}" if eb.debug
     @func[domain].push func
     thisArg = @thisArg
     if not @[domain]?
@@ -77,12 +77,12 @@ class EventObject
       next = sub[1]
       if not obj[next]? #if not (obj[next] instanceof EventObject)
         obj[next] = new EventObject()
-        console.log "create obj[#{next}]: ",obj
+        console.log "create obj[#{next}]: ",obj if eb.debug
       obj = obj[next]
       channel = channel.substring (sub[1].length+1),channel.length
     if withSub
       obj = obj[channel] = new EventObject()
-      console.log "and create obj[#{channel}]: ",obj
+      console.log "and create obj[#{channel}]: ",obj if eb.debug
       channel = undefined
     console.log eb if eb.debug
     rObj = {} =
