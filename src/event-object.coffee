@@ -32,7 +32,7 @@ class EventObject
     if option?
       @_setOption option
     if func?
-      @_addFunction domain,func
+      @_addFunction domain,func,@thisArg
     return @
 
   _setOption: (options) ->
@@ -44,23 +44,26 @@ class EventObject
         @onReady = opt
       else if opt instanceof Function
         # @ = new EventObject if not @[domain]?
-        @_addFunction key,opt
+        @_addFunction key,opt,@thisArg
 
   # _runWith: (thisArg,call) ->
   #   return (args...) ->
   #     call.apply thisArg,args
 
-  _addFunction: (domain,func) ->
+  _addFunction: (domain,func,thisArg) ->
     console.log "_addFunction #{domain}" if eb.debug
     if not @func[domain]?
       @func[domain] = []
       console.log "createFunctionArray #{domain}" if eb.debug
-    @func[domain].push func
-    thisArg = @thisArg
+    @func[domain].push {} =
+      func: func
+      thisArg: thisArg
     if not @[domain]?
       @[domain] = (args...) ->
         for f in @func[domain]
-          f.apply thisArg,args
+          if f.thisArg?
+            f.func.apply f.thisArg,args
+          else f.func.apply @thisArg,args
     # @func[domain] = [] if not @func[domain]?
     # @func[domain].push func
     # @[domain] = (args...) ->
