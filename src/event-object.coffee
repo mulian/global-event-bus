@@ -51,7 +51,9 @@ class EventObject
 
   _addFunction: (domain,func) =>
     console.log "_addFunction #{domain}" if eb.debug
-    @func[domain] = [] if not @func[domain]?
+    if not @func[domain]?
+      @func[domain] = []
+      console.log "createFunctionArray #{domain}"
     @func[domain].push func
     thisArg = @thisArg
     if not @[domain]?
@@ -73,7 +75,6 @@ class EventObject
     while sub=re.exec channel
       next = sub[1]
       if not obj[next]? #if not (obj[next] instanceof EventObject)
-        console.log obj[next]
         obj[next] = new EventObject()
         console.log "create obj[#{next}]: ",obj
       obj = obj[next]
