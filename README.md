@@ -22,10 +22,11 @@ eb.emit.TestCase.sayHello2('there') //prints: hello there
 
 ```javascript
   eb.debug=true;
-  var testCaseEB = eb.add('testCase.firstCase'); //reg. domain
-  eb.testCase.add('test',f);
+  var testCaseEB = eb.ebAdd('testCase.firstCase'); //reg. domain
+  eb.testCase.ebAdd('test',f);
   eb.testCase.thisArg = blubb;
   //OR
+
   // * parameter {Object}: adds Option to Domain
   // * parameter {String}: define the Domain
   // * parameter {Function}: adds function to Domain.methode
@@ -34,11 +35,11 @@ eb.emit.TestCase.sayHello2('there') //prints: hello there
   // without function: adds only the domain
   // Only Object: adds option to current domain
   // return: {Object} : current Domain
-  eb.add('testCase.firstCase.test',f,{thisArg:blubb});
+  eb.ebAdd('testCase.firstCase.test',f,{thisArg:blubb});
 
-  testCaseEB.add('test',f); // -> ev.testCase.firstCase.test()
+  testCaseEB.ebAdd('test',f); // -> ev.testCase.firstCase.test()
   //OR
-  testCaseEB.add({ // -> ev.testCase.firstCase.test()
+  testCaseEB.ebAdd({ // -> ev.testCase.firstCase.test()
     thisArg: blubb,
     onReady: true,
     test: f
@@ -47,10 +48,19 @@ eb.emit.TestCase.sayHello2('there') //prints: hello there
   eb.testCase.test('bla')
 
   //Use options once 2. parameter: only once
-  eb.testCase.add({thisArg:obj,once:true}).test('bla')
+  eb.testCase.ebAdd({thisArg:obj,once:true}).test('bla')
 
   //Add option permanent to domain testCase und above
-  eb.testCase.add({thisArg:obj}).test('bla')
+  eb.testCase.ebAdd({thisArg:obj}).test('bla')
   //Adds option permanent to domain testCase.firstCase (before there was prev addOption)
-  eb.testCase.firstCase.add({thisArg:obj}).test('bla')
+  eb.testCase.firstCase.ebAdd({thisArg:obj}).test('bla')
+
+  //Remove testCase Domain
+  eb.testCase.ebRemove();
+
+  //Remove testCase Domain
+  eb.ebRemove('testCase');
+
+  // Impossible?
+  eb.ebRemove()
 ```
