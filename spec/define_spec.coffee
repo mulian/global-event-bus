@@ -79,11 +79,28 @@ describe 'Will define', ->
     expect(obj1.call).toHaveBeenCalled()
     expect(obj2.call).not.toHaveBeenCalled()
 
-  # it("Use other notation", function() {
-  #   var func = function() {
-  #     return "str"
-  #   }
-  #   // var newObj = new obj()
-  #   var rm = eb('on')('test-case:test-test10',func);
-  #   expect(eb.TestCase.testTest10()).toBe('str');
-  # });
+describe 'ThisArg Test', ->
+  beforeEach ->
+    global.eb = new EventBus
+  it 'with thisArg on define', ->
+    obj =
+      attribute: 'test'
+      call: ->
+        @attribute = 'yes'
+    eb.ebAdd { thisArg: obj }, 'test1.test1', obj.call
+    eb.ebAdd 'test2.test2', obj.call
+    eb.test2.test2()
+    expect(obj.attribute).toBe 'test'
+    eb.test1.test1()
+    expect(obj.attribute).toBe 'yes'
+  it 'with thisArg on call', ->
+    obj =
+      attribute: 'test'
+      call: ->
+        @attribute = 'yes'
+    eb.ebAdd 'test1.test1', obj.call
+    eb.ebAdd 'test2.test2', obj.call
+    eb.test2.test2()
+    expect(obj.attribute).toBe 'test'
+    eb.test1.ebAdd({ thisArg: obj }).test1()
+    expect(obj.attribute).toBe 'yes'

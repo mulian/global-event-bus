@@ -32,11 +32,6 @@
     }).bundle().pipe(source('jasmine_boundle.js')).pipe(buffer()).pipe(sourcemaps.init({
       loadMaps: true,
       debug: true
-    })).pipe(uglify({
-      debug: true,
-      options: {
-        sourceMap: true
-      }
     })).pipe(sourcemaps.write("./")).pipe(connect.reload()).pipe(gulp.dest('./spec/'));
   });
 

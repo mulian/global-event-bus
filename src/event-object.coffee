@@ -72,10 +72,10 @@ class EventObject
         return ret
   _createFunction: (subDomain,func,option) ->
     console.log "_createFunction subDomain:#{subDomain} func:",func if eb.debug
-    thisArg = @thisArg #use default thisarg
-    thisArg = option.thisArg if option?.thisArg? #or other
     @_functions[subDomain] = [] if not @_functions[subDomain]?
     @_functions[subDomain].push (args...) ->
+      thisArg = @thisArg #use default thisarg
+      thisArg = option.thisArg if option?.thisArg? #or other
       if not @_ebIf?
         func.apply thisArg,args
       else

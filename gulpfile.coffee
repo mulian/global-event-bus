@@ -23,10 +23,10 @@ gulp.task 'jasmine_boundle', ->
     .pipe sourcemaps.init {} =
       loadMaps: true
       debug: true
-    .pipe uglify {} =
-      debug: true
-      options:
-        sourceMap: true
+    # .pipe uglify {} =
+    #   debug: true
+    #   options:
+    #     sourceMap: true
     .pipe sourcemaps.write("./")  # /* optional second param here */
     .pipe connect.reload()
     .pipe gulp.dest('./spec/')
