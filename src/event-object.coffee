@@ -1,42 +1,58 @@
 module.exports =
 class EventObject
   constructor: ->
-    @func = {}
+    @_functions = {}
+
+  # Removes all objects von 'xxx.xxx' domain
+  # Goto domain and then call _removeAllSub()
+  # * domain{String}: undefined (call on self) or domain
+  # * return
+  #   * {Boolean}: false there was no domain
+  #   * {Object}: get the sub Domain where its all deleted
   ebRemove: (domain) ->
-    currentObj = @
-    if domain?
-      re = /^([\w$_]+)\./
-      while sub=re.exec domain
-        next = sub[1]
-        currentObj = currentObj[next]
-        domain = domain.substring (next.length+1),domain.length
-      currentObj = currentObj[domain]
-      currentObj._removeAllSub()
-    else
-      currentObj._removeAllSub()
+    console.log "ebRemove: #{domain}" if eb.debug
+    obj = @_goToDomain domain
+    return false if obj==false
+    obj._removeAllSub()
+    return obj
   _removeAllSub: ->
     for key,obj of @
       delete @[key] if obj instanceof EventObject or obj instanceof Function
+  _goToDomain: (domain) ->
+    subRE = /([\w$]+)\.?/g
+    obj = @
+    while sub=subRE.exec(domain)
+      sub = sub[1]
+      return false if not obj[sub]?
+      obj = obj[sub]
+    return obj
 
+  ebIf: (obj) ->
+    @_ebIf=obj
+    return @
 
-  ebAdd: (arg1,arg2,arg3) =>
+  ebAdd: (arg1,arg2,arg3) ->
     sortArgs = eb._defineArg arg1,arg2,arg3
     console.log "ebAdd:",sortArgs if eb.debug
     {func,domain,option} = sortArgs
-    if domain?
-      {currentObj,subDomain} = @_createDomain domain, if func? then false else true
-      if currentObj!=@
-        console.log "go deeper" if eb.debug
-        return currentObj.ebAdd func,option,subDomain
+    domain = eb._replaceToCamelCase domain if domain?
 
-    if option?
+    if /^[\w$]+$/.test(domain) and func?
+      @_createFunction domain,func,option
+    else if domain?
+      wihtoutLast=false
+      wihtoutLast=true if func?
+      {obj,lastDomain} = @_createDomainIfNotExist(domain,wihtoutLast)
+      return obj.ebAdd(lastDomain,func,option)
+    else if option?
       @_setOption option
-    if func?
-      @_addFunction domain,func,@thisArg
+    else
+      console.log "no route!",sortArgs if eb.debug
+
     return @
 
   _setOption: (options) ->
-    console.log @func if eb.debug
+    # console.log @_functions if eb.debug
     for key,opt of options
       if key=='thisArg'
         @thisArg = opt
@@ -44,54 +60,48 @@ class EventObject
         @onReady = opt
       else if opt instanceof Function
         # @ = new EventObject if not @[domain]?
-        @_addFunction key,opt,@thisArg
+        @_createFunction key,opt,options
 
-  # _runWith: (thisArg,call) ->
-  #   return (args...) ->
-  #     call.apply thisArg,args
+  _setFunctionToDomain: (subDomain) ->
+    if not @[subDomain]?
+      @[subDomain] = (args...) ->
+        ret = []
+        for func in @_functions[subDomain]
+          ret.push func.apply @,args
+        delete @_ebIf if @_ebIf?
+        return ret
+  _createFunction: (subDomain,func,option) ->
+    console.log "_createFunction subDomain:#{subDomain} func:",func if eb.debug
+    thisArg = @thisArg #use default thisarg
+    thisArg = option.thisArg if option?.thisArg? #or other
+    @_functions[subDomain] = [] if not @_functions[subDomain]?
+    @_functions[subDomain].push (args...) ->
+      if not @_ebIf?
+        func.apply thisArg,args
+      else
+        if @_objIsEqual @_ebIf,thisArg
+          func.apply thisArg,args
+    @_setFunctionToDomain subDomain
+  _objIsEqual: (fromObj,toObj) ->
+    for k,v of fromObj
+      if not (v == toObj[k])
+        return false
+    return true
 
-  _addFunction: (domain,func,thisArg) ->
-    console.log "_addFunction #{domain}" if eb.debug
-    if not @func[domain]?
-      @func[domain] = []
-      console.log "createFunctionArray #{domain}" if eb.debug
-    @func[domain].push {} =
-      func: func
-      thisArg: thisArg
-    if not @[domain]?
-      @[domain] = (args...) ->
-        for f in @func[domain]
-          if f.thisArg?
-            f.func.apply f.thisArg,args
-          else f.func.apply @thisArg,args
-    # @func[domain] = [] if not @func[domain]?
-    # @func[domain].push func
-    # @[domain] = (args...) ->
-    #   for func in @func[domain]
-    #     func.apply @[domain].thisArg,args
-
-  #Create
-  _createDomain: (channel,withSub=false) ->
-    firstChan = channel
-    channel = eb._replaceToCamelCase(channel)
-    obj = @
-    re = /^([\w$_]+)\./
-    while sub=re.exec channel
-      next = sub[1]
-      if not obj[next]? #if not (obj[next] instanceof EventObject)
-        obj[next] = new EventObject()
-        console.log "create obj[#{next}]: ",obj if eb.debug
-      obj = obj[next]
-      channel = channel.substring (sub[1].length+1),channel.length
-    if withSub
-      if not obj[channel]?
-        obj[channel] = new EventObject()
-        console.log "and create obj[#{channel}]: ",obj if eb.debug
-      obj = obj[channel]
-      channel = undefined
-    console.log eb if eb.debug
-    rObj = {} =
-      currentObj: obj
-      subDomain: channel
-    console.log "_createDomain: #{firstChan}",rObj if eb.debug
-    return rObj
+  #create domain
+  # * domain{String}: domain ex. test.test
+  # * withoutLast{Boolean}: true to without last domain, maby because it is a methode domain
+  _createDomainIfNotExist: (domain, withoutLast=false) ->
+    console.log "_createDomainIfNotExist with domain:#{domain} and withoutLast=#{withoutLast}" if eb.debug
+    subRE = /([\w$]+)\.?/g
+    if withoutLast
+      subRE = /([\w$]+)\./g
+      lastDomain = /\.([\w$]+)$/.exec(domain)[1]
+    currentObj = @
+    while sub=subRE.exec(domain)
+      sub = sub[1]
+      currentObj[sub] = new EventObject() if not currentObj[sub]?
+      currentObj = currentObj[sub]
+    return {} =
+      obj: currentObj
+      lastDomain: lastDomain if withoutLast

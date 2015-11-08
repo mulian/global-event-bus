@@ -6,6 +6,12 @@ describe("Will define", function() {
     global.eb = new Eventbus();
   });
 
+  it("simple createDomain", function() {
+    eb.ebAdd('test1.test2.test3');
+
+    expect(eb.test1.test2.test3).not.toBe(undefined);
+  });
+
   it("simple add", function() {
     var foo = {
       test: function(value) {
@@ -47,7 +53,8 @@ describe("Will define", function() {
 
     eb.ebAdd('test.test.test',obj.func);
     expect(eb.test.test.test!=undefined).toBe(true);
-    eb.ebRemove('test.test');
+
+    expect(eb.ebRemove('test.test')).not.toBe(false);
     expect(eb.test.test.test==undefined).toBe(true);
     // expect(obj.call).not.toHaveBeenCalled();
   });
@@ -64,7 +71,7 @@ describe("Will define", function() {
     eb.test.test1();
     expect(obj.func).toHaveBeenCalled();
   });
-  it('define func within option',function() {
+  it('func within option',function() {
     var obj = {
       attr : 'yes!',
       call1: function() {
@@ -86,6 +93,29 @@ describe("Will define", function() {
     eb.testContainer.call2()
     expect(obj.call1).toHaveBeenCalled();
     expect(obj.call2).toHaveBeenCalled();
+  });
+  it('try ebIf',function() {
+    var obj1 = {
+      id: 1,
+      call: function() {
+        console.log("Hello from obj1");
+      }
+    }
+    var obj2 = {
+      id: 2,
+      call: function() {
+        console.log("Hello from obj2");
+      }
+    }
+    spyOn(obj1,'call');
+    spyOn(obj2,'call');
+
+    eb.ebAdd('test.test',obj1.call,{thisArg:obj1});
+    eb.ebAdd('test.test',obj2.call,{thisArg:obj2});
+
+    eb.test.ebIf({id:1}).test() // will only log 'Hello from obj1', based on thisArg
+    expect(obj1.call).toHaveBeenCalled();
+    expect(obj2.call).not.toHaveBeenCalled();
   });
   // it("Use other notation", function() {
   //   var func = function() {

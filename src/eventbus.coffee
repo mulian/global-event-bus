@@ -35,6 +35,12 @@ class EventBus extends EventObject
       return match.charAt(1).toUpperCase()
     #replace : to .
     channel = channel.replace /:/g, '.'
+
+    # domain =""
+    # while match=/([\w$]+\.?)/g.exec channel
+    #   sub = match[1]
+    #   domain += "#{sub.charAt(1).toLowerCase()}#{sub.substring(1,sub.length)}"
+
     return channel
 
 new EventBus()

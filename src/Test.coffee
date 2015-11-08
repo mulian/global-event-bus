@@ -16,7 +16,7 @@ class Test
     catch e
       console.log "jo test2() geht nicht mehr"
     console.log "RM:"
-    # eb.ebRemove 'Test.xy'
+    eb.ebRemove 'Test.xy'
 
 
   reqEventBus: ->
@@ -24,6 +24,7 @@ class Test
     @rm1 = eb.ebAdd 'Test.xy.z.a.test'
     @rm1 = eb.ebAdd 'Test.xy.z.a.sayHello',@sayHallo
     #and
+    console.log "define Object functions"
     @rm2 = eb.ebAdd 'Test.xy.z.b', {} =
       thisArg:@
       'sayTest1' : @sayTest1

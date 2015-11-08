@@ -51,3 +51,24 @@ TODO: add to npm
   //Remove testCase Domain
   eb.ebRemove('testCase');
 ```
+
+## EB IF
+```javascript
+  var obj1 = {
+    id: 1,
+    call: function() {
+      console.log("Hello from obj1");
+    }
+  }
+  var obj2 = {
+    id: 2,
+    call: function() {
+      console.log("Hello from obj2");
+    }
+  }
+
+  eb.ebAdd('test',obj1.call,{thisArg:obj1});
+  eb.ebAdd('test',obj2.call,{thisArg:obj2});
+
+  eb.ebIf({id:1}).test() // will only log 'Hello from obj1', based on thisArg
+```
