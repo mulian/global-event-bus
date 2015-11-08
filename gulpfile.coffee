@@ -9,7 +9,32 @@ uglify = require 'gulp-uglify'
 sourcemaps = require 'gulp-sourcemaps'
 buffer = require 'vinyl-buffer'
 # gutil = require 'gulp-util'
+jasmineBrowser = require 'gulp-jasmine-browser'
 
+gulp.task 'jasmine_boundle', ->
+  browserify {} =
+      entries: ["./spec/main_spec.coffee"],
+      debug: true,
+      extensions: [".coffee"],
+      transform: ["coffeeify"] # npm install --save-dev coffeeify
+    .bundle()
+    .pipe source('jasmine_boundle.js')
+    .pipe buffer()
+    .pipe sourcemaps.init {} =
+      loadMaps: true
+      debug: true
+    .pipe uglify {} =
+      debug: true
+      options:
+        sourceMap: true
+    .pipe sourcemaps.write("./")  # /* optional second param here */
+    .pipe connect.reload()
+    .pipe gulp.dest('./spec/')
+
+gulp.task 'jasmine', ['jasmine_boundle'], ->
+  return gulp.src(['./spec/jasmine_boundle.js'])
+    .pipe(jasmineBrowser.specRunner())
+    .pipe(jasmineBrowser.server({port: 8888}))
 
 # Create this Gulpfile
 gulp.task 'gulpfile', ->

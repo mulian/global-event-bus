@@ -23,6 +23,7 @@
     "gulp-coffee": "^2.3.1",
     "gulp-coffeelint": "^0.5.0",
     "gulp-connect": "^2.2.0",
+    "gulp-jasmine-browser": "^0.2.3",
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-streamify": "^1.0.2",
@@ -35,6 +36,6 @@
   },
   "scripts": {
     "docco": "docco ./src/*.coffee",
-    "test" : "jasmine spec/define-spec"
+    "test": "jasmine spec/define-spec"
   }
 }

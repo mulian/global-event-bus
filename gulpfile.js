@@ -1,5 +1,5 @@
 (function() {
-  var browserify, buffer, coffee, coffeelint, connect, gulp, rename, source, sourcemaps, uglify;
+  var browserify, buffer, coffee, coffeelint, connect, gulp, jasmineBrowser, rename, source, sourcemaps, uglify;
 
   gulp = require('gulp');
 
@@ -20,6 +20,31 @@
   sourcemaps = require('gulp-sourcemaps');
 
   buffer = require('vinyl-buffer');
+
+  jasmineBrowser = require('gulp-jasmine-browser');
+
+  gulp.task('jasmine_boundle', function() {
+    return browserify({
+      entries: ["./spec/main_spec.coffee"],
+      debug: true,
+      extensions: [".coffee"],
+      transform: ["coffeeify"]
+    }).bundle().pipe(source('jasmine_boundle.js')).pipe(buffer()).pipe(sourcemaps.init({
+      loadMaps: true,
+      debug: true
+    })).pipe(uglify({
+      debug: true,
+      options: {
+        sourceMap: true
+      }
+    })).pipe(sourcemaps.write("./")).pipe(connect.reload()).pipe(gulp.dest('./spec/'));
+  });
+
+  gulp.task('jasmine', ['jasmine_boundle'], function() {
+    return gulp.src(['./spec/jasmine_boundle.js']).pipe(jasmineBrowser.specRunner()).pipe(jasmineBrowser.server({
+      port: 8888
+    }));
+  });
 
   gulp.task('gulpfile', function() {
     return gulp.src('./gulpfile.coffee').pipe(coffeelint()).pipe(coffeelint.reporter()).pipe(coffee()).pipe(gulp.dest('./'));
