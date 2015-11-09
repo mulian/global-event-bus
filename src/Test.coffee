@@ -1,5 +1,5 @@
 Eventbus = require './eventbus'
-
+new Eventbus()
 class Test
   constructor: ->
     @reqEventBus()
@@ -16,25 +16,26 @@ class Test
     catch e
       console.log "jo test2() geht nicht mehr"
     console.log "RM:"
-    eb.ebRemove 'Test.xy'
+    eb.eb
+      remove: 'Test.xy'
 
 
   reqEventBus: ->
     eb.debug=true
-    @rm1 = eb.ebAdd 'Test.xy.z.a.test'
-    @rm1 = eb.ebAdd 'Test.xy.z.a.sayHello',@sayHallo
+    @rm1 = eb.eb 'Test.xy.z.a.test'
+    @rm1 = eb.eb 'Test.xy.z.a.sayHello',@sayHallo
     #and
     console.log "define Object functions"
-    @rm2 = eb.ebAdd 'Test.xy.z.b', {} =
+    @rm2 = eb.eb 'Test.xy.z.b', {} =
       thisArg:@
       'sayTest1' : @sayTest1
       'sayTest2' : @sayTest2
 
-    @rm3 = eb.ebAdd {thisArg:@},'Test.html.sayHello',@sayHallo
-    @rm4 = eb.ebAdd {thisArg:@},'test-case:html-sayHello:asd',@sayHallo
+    @rm3 = eb.eb {thisArg:@},'Test.html.sayHello',@sayHallo
+    @rm4 = eb.eb {thisArg:@},'test-case:html-sayHello:asd',@sayHallo
 
-    eb.ebAdd 'damn',@test
-    eb.ebAdd 'damn',@sayHallo
+    eb.eb 'damn',@test
+    eb.eb 'damn',@sayHallo
     console.log "----"
     eb.damn()
     console.log "----"
@@ -47,10 +48,10 @@ class Test
 
   test: ->
     # console.log eb()
-    eb.Test.xy.z.a.ebAdd(@o).sayHello '-test-'
+    eb.Test.xy.z.a.eb(@o).sayHello '-test-'
 
   test2: ->
-    eb.Test.xy.z.b.ebAdd({thisArg:@}).sayTest1()
+    eb.Test.xy.z.b.eb({thisArg:@}).sayTest1()
     eb.Test.xy.z.b.sayTest2('LÄUFT')
 
   sayHallo: (arg) ->

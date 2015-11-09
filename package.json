@@ -1,5 +1,5 @@
 {
-  "name": "e-bus",
+  "name": "ebs",
   "main": "./lib/eventbus",
   "version": "0.1.0",
   "description": "Global eventbus, for node and web.",

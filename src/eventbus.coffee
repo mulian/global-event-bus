@@ -2,9 +2,9 @@ EventObject = require './event-object'
 
 module.exports =
 class EventBus extends EventObject
-  constructor: ->
+  constructor: (toGlobal=true) ->
     super
-    @_toGlobal()
+    @_toGlobal() if toGlobal
 
   _toGlobal: ->
     if not global.eb?
@@ -42,5 +42,3 @@ class EventBus extends EventObject
     #   domain += "#{sub.charAt(1).toLowerCase()}#{sub.substring(1,sub.length)}"
 
     return channel
-
-new EventBus()

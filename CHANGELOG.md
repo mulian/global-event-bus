@@ -1,9 +1,8 @@
-## 0.2.0 - new Syntax
+## 0.1.0 - new Syntax
+* add 'test-case:run' to camel case 'TestCase.run'
 * use new Syntax
 * update tests
-
-## 0.1.0 - add features
-* add 'test-case:run' to camel case 'TestCase.run'
+* add if
 
 ## 0.0.1 - INIT
 * add Test's

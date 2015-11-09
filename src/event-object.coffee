@@ -11,7 +11,9 @@ class EventObject
   #   * {Object}: get the sub Domain where its all deleted
   ebRemove: (domain) ->
     console.log "ebRemove: #{domain}" if eb.debug
-    obj = @_goToDomain domain
+    if domain instanceof Boolean
+      obj = @
+    else obj = @_goToDomain domain
     return false if obj==false
     obj._removeAllSub()
     return obj
@@ -31,9 +33,9 @@ class EventObject
     @_ebIf=obj
     return @
 
-  ebAdd: (arg1,arg2,arg3) ->
+  eb: (arg1,arg2,arg3) ->
     sortArgs = eb._defineArg arg1,arg2,arg3
-    console.log "ebAdd:",sortArgs if eb.debug
+    console.log "eb:",sortArgs if eb.debug
     {func,domain,option} = sortArgs
     domain = eb._replaceToCamelCase domain if domain?
 
@@ -43,13 +45,14 @@ class EventObject
       wihtoutLast=false
       wihtoutLast=true if func?
       {obj,lastDomain} = @_createDomainIfNotExist(domain,wihtoutLast)
-      return obj.ebAdd(lastDomain,func,option)
+      return obj.eb(lastDomain,func,option)
     else if option?
       @_setOption option
     else
       console.log "no route!",sortArgs if eb.debug
 
     return @
+
 
   _setOption: (options) ->
     # console.log @_functions if eb.debug
@@ -58,6 +61,10 @@ class EventObject
         @thisArg = opt
       else if key == 'onReady'
         @onReady = opt
+      else if key == 'remove'
+        @ebRemove opt
+      else if key == 'if'
+        @ebIf opt
       else if opt instanceof Function
         # @ = new EventObject if not @[domain]?
         @_createFunction key,opt,options

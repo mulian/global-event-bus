@@ -13,7 +13,11 @@
       if (eb.debug) {
         console.log("ebRemove: " + domain);
       }
-      obj = this._goToDomain(domain);
+      if (domain instanceof Boolean) {
+        obj = this;
+      } else {
+        obj = this._goToDomain(domain);
+      }
       if (obj === false) {
         return false;
       }
@@ -54,11 +58,11 @@
       return this;
     };
 
-    EventObject.prototype.ebAdd = function(arg1, arg2, arg3) {
+    EventObject.prototype.eb = function(arg1, arg2, arg3) {
       var domain, func, lastDomain, obj, option, ref, sortArgs, wihtoutLast;
       sortArgs = eb._defineArg(arg1, arg2, arg3);
       if (eb.debug) {
-        console.log("ebAdd:", sortArgs);
+        console.log("eb:", sortArgs);
       }
       func = sortArgs.func, domain = sortArgs.domain, option = sortArgs.option;
       if (domain != null) {
@@ -72,7 +76,7 @@
           wihtoutLast = true;
         }
         ref = this._createDomainIfNotExist(domain, wihtoutLast), obj = ref.obj, lastDomain = ref.lastDomain;
-        return obj.ebAdd(lastDomain, func, option);
+        return obj.eb(lastDomain, func, option);
       } else if (option != null) {
         this._setOption(option);
       } else {
@@ -92,6 +96,10 @@
           results.push(this.thisArg = opt);
         } else if (key === 'onReady') {
           results.push(this.onReady = opt);
+        } else if (key === 'remove') {
+          results.push(this.ebRemove(opt));
+        } else if (key === 'if') {
+          results.push(this.ebIf(opt));
         } else if (opt instanceof Function) {
           results.push(this._createFunction(key, opt, options));
         } else {
@@ -202,9 +210,14 @@
   module.exports = EventBus = (function(superClass) {
     extend(EventBus, superClass);
 
-    function EventBus() {
+    function EventBus(toGlobal) {
+      if (toGlobal == null) {
+        toGlobal = true;
+      }
       EventBus.__super__.constructor.apply(this, arguments);
-      this._toGlobal();
+      if (toGlobal) {
+        this._toGlobal();
+      }
     }
 
     EventBus.prototype._toGlobal = function() {
@@ -257,8 +270,6 @@
 
   })(EventObject);
 
-  new EventBus();
-
 }).call(this);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -268,21 +279,14 @@ var EventBus;
 
 EventBus = require('../lib/eventbus');
 
+new EventBus();
+
 describe('Default Tests', function() {
-  beforeEach(function() {
-    return eb.debug = true;
-  });
   it('is eb global and an EventBus?', function() {
     return expect(eb instanceof EventBus).toBe(true);
   });
-  it('is eb.ebAdd a Function', function() {
-    return expect(eb.ebAdd instanceof Function).toBe(true);
-  });
-  it('is eb.ebRemove a Function', function() {
-    return expect(eb.ebRemove instanceof Function).toBe(true);
-  });
-  return it('is eb.ebIf a Function', function() {
-    return expect(eb.ebIf instanceof Function).toBe(true);
+  return it('is eb.eb a Function', function() {
+    return expect(eb.eb instanceof Function).toBe(true);
   });
 });
 
@@ -295,10 +299,10 @@ EventBus = require('../lib/eventbus');
 
 describe('Will define', function() {
   beforeEach(function() {
-    return global.eb = new EventBus;
+    return global.eb = new EventBus();
   });
   it('simple createDomain', function() {
-    eb.ebAdd('test1.test2.test3');
+    eb.eb('test1.test2.test3');
     return expect(eb.test1.test2.test3).not.toBe(void 0);
   });
   it('simple add', function() {
@@ -309,7 +313,7 @@ describe('Will define', function() {
       }
     };
     spyOn(foo, 'test');
-    eb.ebAdd('test', foo.test);
+    eb.eb('test', foo.test);
     eb.test();
     expect(foo.test).toHaveBeenCalled();
     return expect(eb.test instanceof Function).toBe(true);
@@ -322,10 +326,10 @@ describe('Will define', function() {
         return this.attribute = 'yes';
       }
     };
-    eb.ebAdd({
+    eb.eb({
       thisArg: obj
     }, 'test1.test1', obj.call);
-    eb.ebAdd('test2.test2', obj.call);
+    eb.eb('test2.test2', obj.call);
     eb.test2.test2();
     expect(obj.attribute).toBe('test');
     eb.test1.test1();
@@ -338,9 +342,11 @@ describe('Will define', function() {
         return 'hello';
       }
     };
-    eb.ebAdd('test.test.test', obj.func);
+    eb.eb('test.test.test', obj.func);
     expect(eb.test.test.test !== void 0).toBe(true);
-    expect(eb.ebRemove('test.test')).not.toBe(false);
+    expect(eb.eb({
+      remove: 'test.test'
+    })).not.toBe(false);
     return expect(eb.test.test.test === void 0).toBe(true);
   });
   it('require EventBus again', function() {
@@ -351,7 +357,7 @@ describe('Will define', function() {
       }
     };
     spyOn(obj, 'func');
-    eb.ebAdd('test.test1', obj.func);
+    eb.eb('test.test1', obj.func);
     new EventBus;
     eb.test.test1();
     return expect(obj.func).toHaveBeenCalled();
@@ -369,7 +375,7 @@ describe('Will define', function() {
     };
     spyOn(obj, 'call1');
     spyOn(obj, 'call2');
-    eb.ebAdd('testContainer', {
+    eb.eb('testContainer', {
       thisArg: obj,
       call1: obj.call1,
       call2: obj.call2
@@ -379,7 +385,7 @@ describe('Will define', function() {
     expect(obj.call1).toHaveBeenCalled();
     return expect(obj.call2).toHaveBeenCalled();
   });
-  return it('try ebIf', function() {
+  return it('try eb -> If', function() {
     var obj1, obj2;
     obj1 = {
       id: 1,
@@ -395,14 +401,16 @@ describe('Will define', function() {
     };
     spyOn(obj1, 'call');
     spyOn(obj2, 'call');
-    eb.ebAdd('test.test', obj1.call, {
+    eb.eb('test.test', obj1.call, {
       thisArg: obj1
     });
-    eb.ebAdd('test.test', obj2.call, {
+    eb.eb('test.test', obj2.call, {
       thisArg: obj2
     });
-    eb.test.ebIf({
-      id: 1
+    eb.test.eb({
+      "if": {
+        id: 1
+      }
     }).test();
     expect(obj1.call).toHaveBeenCalled();
     return expect(obj2.call).not.toHaveBeenCalled();
@@ -421,10 +429,10 @@ describe('ThisArg Test', function() {
         return this.attribute = 'yes';
       }
     };
-    eb.ebAdd({
+    eb.eb({
       thisArg: obj
     }, 'test1.test1', obj.call);
-    eb.ebAdd('test2.test2', obj.call);
+    eb.eb('test2.test2', obj.call);
     eb.test2.test2();
     expect(obj.attribute).toBe('test');
     eb.test1.test1();
@@ -438,11 +446,11 @@ describe('ThisArg Test', function() {
         return this.attribute = 'yes';
       }
     };
-    eb.ebAdd('test1.test1', obj.call);
-    eb.ebAdd('test2.test2', obj.call);
+    eb.eb('test1.test1', obj.call);
+    eb.eb('test2.test2', obj.call);
     eb.test2.test2();
     expect(obj.attribute).toBe('test');
-    eb.test1.ebAdd({
+    eb.test1.eb({
       thisArg: obj
     }).test1();
     return expect(obj.attribute).toBe('yes');

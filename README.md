@@ -1,19 +1,36 @@
-# eventbus
-Awesome eventbus for Javascript Web/Node.
+# ebs
+ebs (event-bus-system) is an abnormal great EventBus for Javascript Web/Node.
+
+# Info
+After implement, you could call it with `eb`.
+You could store your events on separate domains. Every domain contains the `eb()` function.
+The function only knows his own domain and his followed domains.
+
+The `eb()` function creates-/removes- Domains, add-/remove (multiple) event definitions and add `thisArg` to the domains and/or event(s).
+
+`eb()` will operate on and return his own current domain.
 
 # Install
 TODO: add to npm
-`npm install e-bus`
-## Examples
+`npm install ebs`
+# Examples
+## Include
+### Node
 ```javascript
-  require('e-bus');
+  var ebs = require('ebs');
+  new ebs(); //add eb to Global
+  //var eb = new ebs(false); //won't add eb to global, maybe for security reasons.
+```
+### Web
 
+
+```javascript
   var f = function(arg) {
     console.log("hello "+arg);
   }
   eb.debug=true;
-  var testCaseEB = eb.ebAdd('testCase.firstCase'); //reg. domain
-  eb.testCase.ebAdd('test',f);
+  var testCaseEB = eb.eb('testCase.firstCase'); //reg. domain
+  eb.testCase.eb('test',f);
   eb.testCase.thisArg = blubb;
   //OR
 
@@ -25,11 +42,11 @@ TODO: add to npm
   // without function: adds only the domain
   // Only Object: adds option to current domain
   // return: {Object} : current Domain
-  eb.ebAdd('testCase.firstCase.test',f,{thisArg:blubb});
+  eb.eb('testCase.firstCase.test',f,{thisArg:blubb});
 
-  testCaseEB.ebAdd('test',f); // -> ev.testCase.firstCase.test()
+  testCaseEB.eb('test',f); // -> ev.testCase.firstCase.test()
   //OR
-  testCaseEB.ebAdd({ // -> ev.testCase.firstCase.test()
+  testCaseEB.eb({ // -> ev.testCase.firstCase.test()
     thisArg: blubb,
     onReady: true,
     test: f
@@ -38,18 +55,18 @@ TODO: add to npm
   eb.testCase.test('bla')
 
   //Use options once 2. parameter: only once
-  eb.testCase.ebAdd({thisArg:obj,once:true}).test('bla')
+  eb.testCase.eb({thisArg:obj,once:true}).test('bla')
 
   //Add option permanent to domain testCase und above
-  eb.testCase.ebAdd({thisArg:obj}).test('bla')
+  eb.testCase.eb({thisArg:obj}).test('bla')
   //Adds option permanent to domain testCase.firstCase (before there was prev addOption)
-  eb.testCase.firstCase.ebAdd({thisArg:obj}).test('bla')
+  eb.testCase.firstCase.eb({thisArg:obj}).test('bla')
+
+  //Removes all sub function from domain
+  eb.eb({remove:true});
 
   //Remove testCase Domain
-  eb.testCase.ebRemove();
-
-  //Remove testCase Domain
-  eb.ebRemove('testCase');
+  eb.eb({remove:'testCase'});
 ```
 
 ## EB IF
@@ -67,8 +84,8 @@ TODO: add to npm
     }
   }
 
-  eb.ebAdd('test',obj1.call,{thisArg:obj1});
-  eb.ebAdd('test',obj2.call,{thisArg:obj2});
+  eb.eb('test',obj1.call,{thisArg:obj1});
+  eb.eb('test',obj2.call,{thisArg:obj2});
 
-  eb.ebIf({id:1}).test() // will only log 'Hello from obj1', based on thisArg
+  eb.eb({if:{id:1}}).test() // will only log 'Hello from obj1', based on thisArg
 ```
