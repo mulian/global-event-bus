@@ -59,11 +59,11 @@ class EventObject
     for key,opt of options
       if key=='thisArg'
         @thisArg = opt
-      else if key == 'onReady'
+      else if key == 'onReady' and opt instanceof Boolean #TODO: del?
         @onReady = opt
-      else if key == 'remove'
+      else if key == 'remove' and (typeof(opt) == 'string' || opt instanceof String)
         @ebRemove opt
-      else if key == 'if'
+      else if key == 'if' and opt instanceof Object
         @ebIf opt
       else if opt instanceof Function
         # @ = new EventObject if not @[domain]?
