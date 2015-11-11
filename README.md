@@ -37,10 +37,10 @@ Now `eb` is globally (on window) available.
 * parameter {String}: define the Domain
 * parameter {Function}: adds function to Domain.methode
 
-without String: adds to current domain
-without function: adds only the domain
-Only Object: adds option to current domain
- return: {Object} : current Domain
+* without String: adds to current domain
+* without function: adds only the domain
+* Only Object: adds option to current domain
+  * return: {Object} : current Domain
 
 ### Function examples
 ```javascript
