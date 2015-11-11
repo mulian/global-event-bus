@@ -1,7 +1,7 @@
 # geb (global-event-bus)
 geb is an abnormal and great EventBus for Javascript Web/Node.
 
-# Short introduction
+# Short simple introduction
 * Definition
 ```javascript
 var f = function(arg) {console.log("hello "+arg);};
