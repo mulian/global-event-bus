@@ -36,14 +36,13 @@ Now `eb` is globally (on window) available.
 * parameter {Object}: adds Option to Domain and functions
 * parameter {String}: define the Domain
 * parameter {Function}: adds function to Domain.methode
+* return {Object}: current Domain
 
 Without domain (String): add to current domain
 
 Without function: add domain and/or option
 
 Only Object: adds option to current domain
-
-Every eb() function call will return his current domain.
 
 ### Function examples
 ```javascript
@@ -80,7 +79,7 @@ Every eb() function call will return his current domain.
   eb.eb({remove:'testCase'});
 ```
 
-### EB IF
+### IF
 ```javascript
   var obj1 = {
     id: 1,
