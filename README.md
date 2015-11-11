@@ -1,15 +1,6 @@
 # geb (global-event-bus)
 geb is an abnormal and great EventBus for Javascript Web/Node.
 
-# Info
-After implement, you could call it with `eb`.
-You could store your events on separate domains. Every domain contains the `eb()` function.
-The function only knows his own domain and his followed domains.
-
-The `eb()` function creates-/removes- Domains, add-/remove (multiple) event definitions and add `thisArg` to the domains and/or event(s).
-
-`eb()` will operate on and return his own current domain.
-
 # Install
 `npm install geb`
 
@@ -31,6 +22,15 @@ Now `eb` is globally (on window) available.
 # Examples
 
 ## eb()
+
+### Info
+After implement, you could call it with `eb`.
+You could store your events on separate domains. Every domain contains the `eb()` function.
+The function only knows his own domain and his followed domains.
+
+The `eb()` function creates-/removes- Domains, add-/remove (multiple) event definitions and add `thisArg` to the domains and/or event(s).
+
+`eb()` will operate on and return his own current domain.
 
 ### Function definition
 * parameter {Object}: adds Option to Domain and functions
