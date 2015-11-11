@@ -19,11 +19,12 @@ class EventObject
       wihtoutLast=true if func?
       {obj,lastDomain} = @___.createDomainIfNotExist(domain,wihtoutLast)
       return obj.eb(lastDomain,func,option)
-    else if option? #only if options are set
-      console.log "eb#3" if eb?.debug
-      @___.setOption option
     else
       console.log "no route!",sortArgs if eb?.debug
+
+    if option? #only if options are set
+      console.log "eb#3" if eb?.debug
+      @___.setOption option
 
     return @
 
@@ -65,9 +66,11 @@ class HiddenFunctions
     return @obj
 
   setOption: (options) ->
+    console.log "options"
     # console.log @_functions if eb?.debug
     for key,opt of options
-      if key=='thisArg'
+      if key=='thisArg' and opt instanceof Object
+        console.log "set this arg to ",@obj
         @obj.thisArg = opt
       else if key == 'onReady' and opt instanceof Boolean #TODO: del?
         @onReady = opt
