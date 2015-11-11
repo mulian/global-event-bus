@@ -14,7 +14,7 @@ eb.testCase.firstCase.test('there');
 ```
 
 # Install
-`npm install geb`
+`npm install geb --save`
 
 ## Include
 
