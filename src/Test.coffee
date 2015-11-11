@@ -1,4 +1,4 @@
-Eventbus = require './eventbus'
+Eventbus = require './event-bus'
 new Eventbus()
 class Test
   constructor: ->

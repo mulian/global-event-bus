@@ -48,7 +48,7 @@ gulp.task 'gulpfile', ->
 # Run development Server
 gulp.task 'server', ->
   connect.server {} =
-    root: ['test','dest']
+    root: ['test','lib']
     port: 8877
     host: 'localhost'
     livereload: true
@@ -59,6 +59,7 @@ gulp.task 'watch', ->
   #['browserify'
   gulp.watch './gulpfile.coffee', ['gulpfile']
   gulp.watch './test/*.html', ['html']
+
 
 # If Html changed -> reload
 gulp.task 'html', ->
@@ -76,7 +77,7 @@ gulp.task 'coffee_lint', ->
 # Compile Coffee->JS with sourcemap and browserify
 gulp.task 'coffee_browserify', ->
   browserify {} =
-      entries: ["./src/test.coffee"],
+      entries: ["./src/event-bus.coffee"],
       debug: true,
       extensions: [".coffee"],
       transform: ["coffeeify"] # npm install --save-dev coffeeify
@@ -92,7 +93,7 @@ gulp.task 'coffee_browserify', ->
         sourceMap: true
     .pipe sourcemaps.write("./")  # /* optional second param here */
     .pipe connect.reload()
-    .pipe gulp.dest('./dest/')
+    .pipe gulp.dest('./lib/')
 
 gulp.task 'default', ['server','watch']
 
@@ -107,19 +108,5 @@ gulp.task 'coffee', ->
     # .pipe coffeelint()
     # .pipe coffeelint.reporter()
     .pipe coffee()
-    # .pipe(sourcemaps.write('./'))
+    .pipe(sourcemaps.write('./'))
     .pipe gulp.dest './lib/'
-
-# gulp.task 'browserify', ['coffee'], ->
-#   browserify('./lib/touch.js',{debug:true})
-#     .transform(to5ify)
-#     .bundle()
-#     # .on('error', gutil.log.bind(gutil, 'Browserify Error'))
-#     .pipe source('touch.js')
-#     .pipe(buffer())
-#     .pipe(sourcemaps.init({loadMaps: true})) # loads map from browserify file
-#     .pipe streamify(uglify())
-#     .pipe rename('bundle.js')
-#     .pipe(sourcemaps.write('./')) # writes .map file
-#     .pipe connect.reload()
-#     .pipe gulp.dest('./test/')

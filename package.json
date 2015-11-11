@@ -1,6 +1,6 @@
 {
-  "name": "ebs",
-  "main": "./lib/eventbus",
+  "name": "geb",
+  "main": "./lib/event-bus",
   "version": "0.1.0",
   "description": "Global eventbus, for node and web.",
   "keywords": [
@@ -8,7 +8,7 @@
     "event",
     "bus"
   ],
-  "repository": "",
+  "repository": "https://github.com/mulian/global-event-bus",
   "license": "MIT",
   "engines": {},
   "author": "Max Julian Hoffmann",

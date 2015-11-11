@@ -1,3 +1,5 @@
-test
 node_modules
+spec
 src
+test
+gulp*

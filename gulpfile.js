@@ -47,7 +47,7 @@
 
   gulp.task('server', function() {
     return connect.server({
-      root: ['test', 'dest'],
+      root: ['test', 'lib'],
       port: 8877,
       host: 'localhost',
       livereload: true
@@ -72,7 +72,7 @@
 
   gulp.task('coffee_browserify', function() {
     return browserify({
-      entries: ["./src/test.coffee"],
+      entries: ["./src/event-bus.coffee"],
       debug: true,
       extensions: [".coffee"],
       transform: ["coffeeify"]
@@ -84,7 +84,7 @@
       options: {
         sourceMap: true
       }
-    })).pipe(sourcemaps.write("./")).pipe(connect.reload()).pipe(gulp.dest('./dest/'));
+    })).pipe(sourcemaps.write("./")).pipe(connect.reload()).pipe(gulp.dest('./lib/'));
   });
 
   gulp.task('default', ['server', 'watch']);
@@ -92,7 +92,7 @@
   gulp.task('coffee', function() {
     return gulp.src('./src/*.coffee').pipe(sourcemaps.init({
       loadMaps: true
-    })).pipe(coffee()).pipe(gulp.dest('./lib/'));
+    })).pipe(coffee()).pipe(sourcemaps.write('./')).pipe(gulp.dest('./lib/'));
   });
 
 }).call(this);

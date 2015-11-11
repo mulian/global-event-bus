@@ -1,5 +1,5 @@
-# ebs
-ebs (event-bus-system) is an abnormal great EventBus for Javascript Web/Node.
+# geb
+geb (event-bus-system) is an abnormal great EventBus for Javascript Web/Node.
 
 # Info
 After implement, you could call it with `eb`.
@@ -12,18 +12,22 @@ The `eb()` function creates-/removes- Domains, add-/remove (multiple) event defi
 
 # Install
 TODO: add to npm
-`npm install ebs`
+`npm install geb`
 # Examples
 ## Include
 ### Node
 ```javascript
-  var ebs = require('ebs');
-  new ebs(); //add eb to Global
-  //var eb = new ebs(false); //won't add eb to global, maybe for security reasons.
+  var geb = require('geb');
+  new geb(); //add eb to Global and return it
+  //var eb = new geb(false); //won't add eb to global, maybe for security reasons.
 ```
 ### Web
+Use the Browserify `boundle.js` in folder `node_modules/geb/lib/boundle.js`
+```html
+  <script language='javascript' type='text/javascript' src='<path_to>/boundle.js'></script>
+```
 
-
+## Tutorials?
 ```javascript
   var f = function(arg) {
     console.log("hello "+arg);
