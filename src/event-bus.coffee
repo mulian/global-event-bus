@@ -37,3 +37,6 @@ class EventBus extends EventObject
     channel = channel.replace /:/g, '.'
 
     return channel
+
+if window? #not node
+  new EventBus()

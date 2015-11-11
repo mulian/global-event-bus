@@ -1,10 +1,42 @@
+
 module.exports =
 class EventObject
   constructor: ->
-    @_functions = {}
+    # @___.obj=@
+    @___ = new HiddenFunctions @
 
+  eb: (arg1,arg2,arg3) ->
+    sortArgs = eb._defineArg arg1,arg2,arg3
+    console.log "eb:",sortArgs if eb.debug
+    {func,domain,option} = sortArgs
+    domain = eb._replaceToCamelCase domain if domain?
+    console.log "current Obj: ",@
+    if /^[\w$]+$/.test(domain) and func? #if eb('asd',function() ...)
+      console.log "eb#1" if eb.debug
+      @___.createFunction domain,func,option
+    else if domain? #if eb('asd.asd')
+      console.log "eb#2" if eb.debug
+      wihtoutLast=false
+      wihtoutLast=true if func?
+      {obj,lastDomain} = @___.createDomainIfNotExist(domain,wihtoutLast)
+      console.log obj
+      return obj.eb(lastDomain,func,option)
+    else if option? #only if options are set
+      console.log "eb#3" if eb.debug
+      @___.setOption option
+    else
+      console.log "no route!",sortArgs if eb.debug
+
+    return @
+
+# HiddenFunctions = require './hidden-functions'
+class HiddenFunctions
+  functions : {}
+  constructor : (obj) ->
+    console.log "set to ",obj
+    @obj = obj
   # Removes all objects von 'xxx.xxx' domain
-  # Goto domain and then call _removeAllSub()
+  # Goto domain and then call removeAllSub()
   # * domain{String}: undefined (call on self) or domain
   # * return
   #   * {Boolean}: false there was no domain
@@ -12,17 +44,17 @@ class EventObject
   ebRemove: (domain) ->
     console.log "ebRemove: #{domain}" if eb.debug
     if domain instanceof Boolean
-      obj = @
-    else obj = @_goToDomain domain
+      obj = @obj
+    else obj = @goToDomain domain
     return false if obj==false
-    obj._removeAllSub()
+    obj.___.removeAllSub()
     return obj
-  _removeAllSub: ->
-    for key,obj of @
-      delete @[key] if obj instanceof EventObject or obj instanceof Function
-  _goToDomain: (domain) ->
+  removeAllSub: ->
+    for key,obj of @obj
+      delete @obj[key] if obj instanceof EventObject or obj instanceof Function
+  goToDomain: (domain) ->
     subRE = /([\w$]+)\.?/g
-    obj = @
+    obj = @obj
     while sub=subRE.exec(domain)
       sub = sub[1]
       return false if not obj[sub]?
@@ -31,34 +63,13 @@ class EventObject
 
   ebIf: (obj) ->
     @_ebIf=obj
-    return @
+    return @obj
 
-  eb: (arg1,arg2,arg3) ->
-    sortArgs = eb._defineArg arg1,arg2,arg3
-    console.log "eb:",sortArgs if eb.debug
-    {func,domain,option} = sortArgs
-    domain = eb._replaceToCamelCase domain if domain?
-
-    if /^[\w$]+$/.test(domain) and func?
-      @_createFunction domain,func,option
-    else if domain?
-      wihtoutLast=false
-      wihtoutLast=true if func?
-      {obj,lastDomain} = @_createDomainIfNotExist(domain,wihtoutLast)
-      return obj.eb(lastDomain,func,option)
-    else if option?
-      @_setOption option
-    else
-      console.log "no route!",sortArgs if eb.debug
-
-    return @
-
-
-  _setOption: (options) ->
+  setOption: (options) ->
     # console.log @_functions if eb.debug
     for key,opt of options
       if key=='thisArg'
-        @thisArg = opt
+        @obj.thisArg = opt
       else if key == 'onReady' and opt instanceof Boolean #TODO: del?
         @onReady = opt
       else if key == 'remove' and (typeof(opt) == 'string' || opt instanceof String)
@@ -67,29 +78,30 @@ class EventObject
         @ebIf opt
       else if opt instanceof Function
         # @ = new EventObject if not @[domain]?
-        @_createFunction key,opt,options
+        @createFunction key,opt,options
 
-  _setFunctionToDomain: (subDomain) ->
-    if not @[subDomain]?
-      @[subDomain] = (args...) ->
+  setFunctionToDomain: (subDomain) -> #@==EventObject.___
+    if not @obj[subDomain]?
+      @obj[subDomain] = (args...) -> #@==EventObject
         ret = []
-        for func in @_functions[subDomain]
+        for func in @___.functions[subDomain]
           ret.push func.apply @,args
-        delete @_ebIf if @_ebIf?
+        delete @___._ebIf if @___._ebIf?
         return ret
-  _createFunction: (subDomain,func,option) ->
-    console.log "_createFunction subDomain:#{subDomain} func:",func if eb.debug
-    @_functions[subDomain] = [] if not @_functions[subDomain]?
-    @_functions[subDomain].push (args...) ->
+  createFunction: (subDomain,func,option) -> #@==EventObject.___
+    console.log "createFunction subDomain:#{subDomain} func:",func if eb.debug
+    @functions[subDomain] = [] if not @functions[subDomain]?
+    @functions[subDomain].push (args...) -> #@==EventObject
       thisArg = @thisArg #use default thisarg
       thisArg = option.thisArg if option?.thisArg? #or other
-      if not @_ebIf?
+      if not @___._ebIf?
         func.apply thisArg,args
       else
-        if @_objIsEqual @_ebIf,thisArg
+        if @___.objIsEqual @___._ebIf,thisArg
           func.apply thisArg,args
-    @_setFunctionToDomain subDomain
-  _objIsEqual: (fromObj,toObj) ->
+    @setFunctionToDomain subDomain
+  objIsEqual: (fromObj,toObj) ->
+    return false if not fromObj? or not toObj?
     for k,v of fromObj
       if not (v == toObj[k])
         return false
@@ -98,16 +110,18 @@ class EventObject
   #create domain
   # * domain{String}: domain ex. test.test
   # * withoutLast{Boolean}: true to without last domain, maby because it is a methode domain
-  _createDomainIfNotExist: (domain, withoutLast=false) ->
-    console.log "_createDomainIfNotExist with domain:#{domain} and withoutLast=#{withoutLast}" if eb.debug
+  createDomainIfNotExist: (domain, withoutLast=false) ->
+    console.log "createDomainIfNotExist with domain:#{domain} and withoutLast=#{withoutLast}" if eb.debug
+    currentObj = @obj
     subRE = /([\w$]+)\.?/g
     if withoutLast
       subRE = /([\w$]+)\./g
       lastDomain = /\.([\w$]+)$/.exec(domain)[1]
-    currentObj = @
     while sub=subRE.exec(domain)
       sub = sub[1]
       currentObj[sub] = new EventObject() if not currentObj[sub]?
+      console.log "currentObj: ",currentObj, "add ", currentObj[sub]
+      # @___.obj=@
       currentObj = currentObj[sub]
     return {} =
       obj: currentObj

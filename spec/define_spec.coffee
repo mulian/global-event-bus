@@ -1,4 +1,4 @@
-EventBus = require('../lib/eventbus')
+EventBus = require('../lib/event-bus')
 
 describe 'Will define', ->
   beforeEach ->
