@@ -7,25 +7,23 @@ class EventObject
 
   eb: (arg1,arg2,arg3) ->
     sortArgs = eb._defineArg arg1,arg2,arg3
-    console.log "eb:",sortArgs if eb.debug
+    console.log "eb:",sortArgs if eb?.debug
     {func,domain,option} = sortArgs
     domain = eb._replaceToCamelCase domain if domain?
-    console.log "current Obj: ",@
     if /^[\w$]+$/.test(domain) and func? #if eb('asd',function() ...)
-      console.log "eb#1" if eb.debug
+      console.log "eb#1" if eb?.debug
       @___.createFunction domain,func,option
     else if domain? #if eb('asd.asd')
-      console.log "eb#2" if eb.debug
+      console.log "eb#2" if eb?.debug
       wihtoutLast=false
       wihtoutLast=true if func?
       {obj,lastDomain} = @___.createDomainIfNotExist(domain,wihtoutLast)
-      console.log obj
       return obj.eb(lastDomain,func,option)
     else if option? #only if options are set
-      console.log "eb#3" if eb.debug
+      console.log "eb#3" if eb?.debug
       @___.setOption option
     else
-      console.log "no route!",sortArgs if eb.debug
+      console.log "no route!",sortArgs if eb?.debug
 
     return @
 
@@ -33,8 +31,9 @@ class EventObject
 class HiddenFunctions
   functions : {}
   constructor : (obj) ->
-    console.log "set to ",obj
+    console.log "Init Hiddenfunction for ",obj if eb?.debug
     @obj = obj
+
   # Removes all objects von 'xxx.xxx' domain
   # Goto domain and then call removeAllSub()
   # * domain{String}: undefined (call on self) or domain
@@ -42,7 +41,7 @@ class HiddenFunctions
   #   * {Boolean}: false there was no domain
   #   * {Object}: get the sub Domain where its all deleted
   ebRemove: (domain) ->
-    console.log "ebRemove: #{domain}" if eb.debug
+    console.log "ebRemove: #{domain}" if eb?.debug
     if domain instanceof Boolean
       obj = @obj
     else obj = @goToDomain domain
@@ -66,7 +65,7 @@ class HiddenFunctions
     return @obj
 
   setOption: (options) ->
-    # console.log @_functions if eb.debug
+    # console.log @_functions if eb?.debug
     for key,opt of options
       if key=='thisArg'
         @obj.thisArg = opt
@@ -89,7 +88,7 @@ class HiddenFunctions
         delete @___._ebIf if @___._ebIf?
         return ret
   createFunction: (subDomain,func,option) -> #@==EventObject.___
-    console.log "createFunction subDomain:#{subDomain} func:",func if eb.debug
+    console.log "createFunction subDomain:#{subDomain} func:",func if eb?.debug
     @functions[subDomain] = [] if not @functions[subDomain]?
     @functions[subDomain].push (args...) -> #@==EventObject
       thisArg = @thisArg #use default thisarg
@@ -111,7 +110,7 @@ class HiddenFunctions
   # * domain{String}: domain ex. test.test
   # * withoutLast{Boolean}: true to without last domain, maby because it is a methode domain
   createDomainIfNotExist: (domain, withoutLast=false) ->
-    console.log "createDomainIfNotExist with domain:#{domain} and withoutLast=#{withoutLast}" if eb.debug
+    console.log "createDomainIfNotExist with domain:#{domain} and withoutLast=#{withoutLast}" if eb?.debug
     currentObj = @obj
     subRE = /([\w$]+)\.?/g
     if withoutLast
@@ -120,8 +119,6 @@ class HiddenFunctions
     while sub=subRE.exec(domain)
       sub = sub[1]
       currentObj[sub] = new EventObject() if not currentObj[sub]?
-      console.log "currentObj: ",currentObj, "add ", currentObj[sub]
-      # @___.obj=@
       currentObj = currentObj[sub]
     return {} =
       obj: currentObj

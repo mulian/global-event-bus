@@ -94,21 +94,20 @@
     EventObject.prototype.eb = function(arg1, arg2, arg3) {
       var domain, func, lastDomain, obj, option, ref, sortArgs, wihtoutLast;
       sortArgs = eb._defineArg(arg1, arg2, arg3);
-      if (eb.debug) {
+      if (typeof eb !== "undefined" && eb !== null ? eb.debug : void 0) {
         console.log("eb:", sortArgs);
       }
       func = sortArgs.func, domain = sortArgs.domain, option = sortArgs.option;
       if (domain != null) {
         domain = eb._replaceToCamelCase(domain);
       }
-      console.log("current Obj: ", this);
       if (/^[\w$]+$/.test(domain) && (func != null)) {
-        if (eb.debug) {
+        if (typeof eb !== "undefined" && eb !== null ? eb.debug : void 0) {
           console.log("eb#1");
         }
         this.___.createFunction(domain, func, option);
       } else if (domain != null) {
-        if (eb.debug) {
+        if (typeof eb !== "undefined" && eb !== null ? eb.debug : void 0) {
           console.log("eb#2");
         }
         wihtoutLast = false;
@@ -116,15 +115,14 @@
           wihtoutLast = true;
         }
         ref = this.___.createDomainIfNotExist(domain, wihtoutLast), obj = ref.obj, lastDomain = ref.lastDomain;
-        console.log(obj);
         return obj.eb(lastDomain, func, option);
       } else if (option != null) {
-        if (eb.debug) {
+        if (typeof eb !== "undefined" && eb !== null ? eb.debug : void 0) {
           console.log("eb#3");
         }
         this.___.setOption(option);
       } else {
-        if (eb.debug) {
+        if (typeof eb !== "undefined" && eb !== null ? eb.debug : void 0) {
           console.log("no route!", sortArgs);
         }
       }
@@ -139,13 +137,15 @@
     HiddenFunctions.prototype.functions = {};
 
     function HiddenFunctions(obj) {
-      console.log("set to ", obj);
+      if (typeof eb !== "undefined" && eb !== null ? eb.debug : void 0) {
+        console.log("Init Hiddenfunction for ", obj);
+      }
       this.obj = obj;
     }
 
     HiddenFunctions.prototype.ebRemove = function(domain) {
       var obj;
-      if (eb.debug) {
+      if (typeof eb !== "undefined" && eb !== null ? eb.debug : void 0) {
         console.log("ebRemove: " + domain);
       }
       if (domain instanceof Boolean) {
@@ -236,7 +236,7 @@
     };
 
     HiddenFunctions.prototype.createFunction = function(subDomain, func, option) {
-      if (eb.debug) {
+      if (typeof eb !== "undefined" && eb !== null ? eb.debug : void 0) {
         console.log("createFunction subDomain:" + subDomain + " func:", func);
       }
       if (this.functions[subDomain] == null) {
@@ -279,7 +279,7 @@
       if (withoutLast == null) {
         withoutLast = false;
       }
-      if (eb.debug) {
+      if (typeof eb !== "undefined" && eb !== null ? eb.debug : void 0) {
         console.log("createDomainIfNotExist with domain:" + domain + " and withoutLast=" + withoutLast);
       }
       currentObj = this.obj;
@@ -293,7 +293,6 @@
         if (currentObj[sub] == null) {
           currentObj[sub] = new EventObject();
         }
-        console.log("currentObj: ", currentObj, "add ", currentObj[sub]);
         currentObj = currentObj[sub];
       }
       return {
