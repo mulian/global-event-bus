@@ -37,22 +37,26 @@ Now `eb` is globally (on window) available.
 * parameter {String}: define the Domain
 * parameter {Function}: adds function to Domain.methode
 
-Without String: adds to current domain
+Without domain (String): add to current domain
 
-Without function: adds only the domain
+Without function: add domain and/or option
 
 Only Object: adds option to current domain
-  * return: {Object} : current Domain
+
+Every eb() function call will return his current domain.
 
 ### Function examples
 ```javascript
   // eb.debug=true;
+
+  // define an Object
   var o = {
     f: function(arg) {
       console.log("hello "+arg);
     }
   }
 
+  //set testCaseEB to subdomain and add function test with thisArg to subdomain
   var testCaseEB = eb.eb('testCase.firstCase'); //reg. domain
   testCaseEB.eb('test',o.f);
   testCaseEB.thisArg = o;
