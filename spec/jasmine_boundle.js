@@ -116,15 +116,16 @@
         }
         ref = this.___.createDomainIfNotExist(domain, wihtoutLast), obj = ref.obj, lastDomain = ref.lastDomain;
         return obj.eb(lastDomain, func, option);
-      } else if (option != null) {
-        if (typeof eb !== "undefined" && eb !== null ? eb.debug : void 0) {
-          console.log("eb#3");
-        }
-        this.___.setOption(option);
       } else {
         if (typeof eb !== "undefined" && eb !== null ? eb.debug : void 0) {
           console.log("no route!", sortArgs);
         }
+      }
+      if (option != null) {
+        if (typeof eb !== "undefined" && eb !== null ? eb.debug : void 0) {
+          console.log("eb#3");
+        }
+        this.___.setOption(option);
       }
       return this;
     };
@@ -196,10 +197,12 @@
 
     HiddenFunctions.prototype.setOption = function(options) {
       var key, opt, results;
+      console.log("options");
       results = [];
       for (key in options) {
         opt = options[key];
-        if (key === 'thisArg') {
+        if (key === 'thisArg' && opt instanceof Object) {
+          console.log("set this arg to ", this.obj);
           results.push(this.obj.thisArg = opt);
         } else if (key === 'onReady' && opt instanceof Boolean) {
           results.push(this.onReady = opt);

@@ -11,9 +11,7 @@ The `eb()` function creates-/removes- Domains, add-/remove (multiple) event defi
 `eb()` will operate on and return his own current domain.
 
 # Install
-TODO: add to npm
 `npm install geb`
-# Examples
 
 ## Include
 
@@ -29,6 +27,8 @@ Use the Browserify `boundle.js` in folder `node_modules/geb/lib/boundle.js`
   <script language='javascript' type='text/javascript' src='<path_to>/boundle.js'></script>
 ```
 Now `eb` is globally (on window) available.
+
+# Examples
 
 ## eb()
 
