@@ -1,5 +1,5 @@
-# geb
-geb (event-bus-system) is an abnormal great EventBus for Javascript Web/Node.
+# geb (global-event-bus)
+geb is an abnormal great EventBus for Javascript Web/Node.
 
 # Info
 After implement, you could call it with `eb`.

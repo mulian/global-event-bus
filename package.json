@@ -2,7 +2,7 @@
   "name": "geb",
   "main": "./lib/event-bus",
   "version": "0.1.0",
-  "description": "Global eventbus, for node and web.",
+  "description": "geb is an abnormal great EventBus for Javascript Web/Node.",
   "keywords": [
     "eventbus",
     "event",
