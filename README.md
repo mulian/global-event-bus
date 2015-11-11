@@ -7,7 +7,7 @@ geb is an abnormal and great EventBus for Javascript Web/Node.
 var f = function(arg) {console.log("hello "+arg);};
 eb.eb('testCase.firstCase.test',f);
 ```
-* Run
+* Run from everywhere
 ```javascript
 eb.testCase.firstCase.test('there');
 // will print: 'hello there'
