@@ -101,5 +101,6 @@ You could add more then one function to damain.
   eb.eb('test',obj1.call,{thisArg:obj1});
   eb.eb('test',obj2.call,{thisArg:obj2});
 
-  eb.eb({if:{id:1}}).test() // will only log 'Hello from obj1', the if object checks the thisArg object
+  // will only log 'Hello from obj1', the if object checks the thisArg object
+  eb.eb({if:{id:1}}).test()
 ```
