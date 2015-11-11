@@ -4,6 +4,7 @@ class EventObject
   constructor: ->
     # @___.obj=@
     # @___ = new HiddenFunctions @
+    @___functions = {}
 
   eb: (arg1,arg2,arg3) ->
     sortArgs = eb._defineArg arg1,arg2,arg3
@@ -30,7 +31,6 @@ class EventObject
 
 # HiddenFunctions = require './hidden-functions'
 # class HiddenFunctions
-  ___functions : {}
 
   # Removes all objects von 'xxx.xxx' domain
   # Goto domain and then call removeAllSub()

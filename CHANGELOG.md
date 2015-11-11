@@ -1,6 +1,9 @@
 ## - next Version
 * add once (option) for thisArg to use it only once
 
+## 0.1.2 - bugfix
+* bug 'every function saved in one object' fixed
+
 ## 0.1.1 - bugfix
 * bugfix
 

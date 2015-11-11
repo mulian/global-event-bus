@@ -87,7 +87,9 @@
     slice = [].slice;
 
   module.exports = EventObject = (function() {
-    function EventObject() {}
+    function EventObject() {
+      this.___functions = {};
+    }
 
     EventObject.prototype.eb = function(arg1, arg2, arg3) {
       var domain, func, lastDomain, obj, option, ref, sortArgs, wihtoutLast;
@@ -127,8 +129,6 @@
       }
       return this;
     };
-
-    EventObject.prototype.___functions = {};
 
     EventObject.prototype.___ebRemove = function(domain) {
       var obj;
