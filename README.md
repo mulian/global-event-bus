@@ -1,6 +1,18 @@
 # geb (global-event-bus)
 geb is an abnormal and great EventBus for Javascript Web/Node.
 
+# Short introduction
+## Definition
+```javascript
+var f = function(arg) {console.log("hello "+arg);};
+eb.eb('testCase.firstCase.test',f);
+```
+## Run
+```javascript
+eb.testCase.firstCase.test('there');
+// will print: 'hello there'
+```
+
 # Install
 `npm install geb`
 
