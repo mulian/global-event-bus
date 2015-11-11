@@ -1,5 +1,5 @@
 # geb (global-event-bus)
-geb is an abnormal great EventBus for Javascript Web/Node.
+geb is an abnormal and great EventBus for Javascript Web/Node.
 
 # Info
 After implement, you could call it with `eb`.
@@ -14,7 +14,9 @@ The `eb()` function creates-/removes- Domains, add-/remove (multiple) event defi
 TODO: add to npm
 `npm install geb`
 # Examples
+
 ## Include
+
 ### Node
 ```javascript
   var geb = require('geb');
@@ -26,44 +28,43 @@ Use the Browserify `boundle.js` in folder `node_modules/geb/lib/boundle.js`
 ```html
   <script language='javascript' type='text/javascript' src='<path_to>/boundle.js'></script>
 ```
+Now `eb` is globally (on window) available.
 
-## Tutorials?
+## eb
+
+### Function definition
+* parameter {Object}: adds Option to Domain and functions
+* parameter {String}: define the Domain
+* parameter {Function}: adds function to Domain.methode
+
+without String: adds to current domain
+without function: adds only the domain
+Only Object: adds option to current domain
+ return: {Object} : current Domain
+
+### Function examples
 ```javascript
-  var f = function(arg) {
-    console.log("hello "+arg);
+  // eb.debug=true;
+  var o = {
+    f: function(arg) {
+      console.log("hello "+arg);
+    }
   }
-  eb.debug=true;
+
   var testCaseEB = eb.eb('testCase.firstCase'); //reg. domain
-  eb.testCase.eb('test',f);
-  eb.testCase.thisArg = blubb;
-  //OR
+  testCaseEB.eb('test',o.f);
+  testCaseEB.thisArg = o;
 
-  // * parameter {Object}: adds Option to Domain and functions
-  // * parameter {String}: define the Domain
-  // * parameter {Function}: adds function to Domain.methode
-  //
-  // without String: adds to current domain
-  // without function: adds only the domain
-  // Only Object: adds option to current domain
-  // return: {Object} : current Domain
-  eb.eb('testCase.firstCase.test',f,{thisArg:blubb});
+  //OR same in one Statement:
+  var testCaseEB = eb.eb('testCase.firstCase.test',o.f,{thisArg:o});
 
-  testCaseEB.eb('test',f); // -> ev.testCase.firstCase.test()
-  //OR
-  testCaseEB.eb({ // -> ev.testCase.firstCase.test()
-    thisArg: blubb,
-    onReady: true,
-    test: f
-  });
+  //call it with:
+  testCaseEB.test()
 
-  eb.testCase.test('bla')
-
-  //Use options once 2. parameter: only once
-  eb.testCase.eb({thisArg:obj,once:true}).test('bla')
+  //OR globally
+  eb.testCase.firstCase.test()
 
   //Add option permanent to domain testCase und above
-  eb.testCase.eb({thisArg:obj}).test('bla')
-  //Adds option permanent to domain testCase.firstCase (before there was prev addOption)
   eb.testCase.firstCase.eb({thisArg:obj}).test('bla')
 
   //Removes all sub function from domain
@@ -73,7 +74,7 @@ Use the Browserify `boundle.js` in folder `node_modules/geb/lib/boundle.js`
   eb.eb({remove:'testCase'});
 ```
 
-## EB IF
+### EB IF
 ```javascript
   var obj1 = {
     id: 1,

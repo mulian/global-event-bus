@@ -1,4 +1,8 @@
+## - next Version
+* add once (option) for thisArg to use it only once
+
 ## 0.1.0 - new Syntax
+* hide not necessary functions
 * add 'test-case:run' to camel case 'TestCase.run'
 * use new Syntax
 * update tests
