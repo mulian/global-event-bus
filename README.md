@@ -103,6 +103,3 @@ You could add more then one function to damain.
 
   eb.eb({if:{id:1}}).test() // will only log 'Hello from obj1', the if object checks the thisArg object
 ```
-
-# Note
-You could add,remove events or domains and set options in only one eb function call. But I recommend you to write only same elementary steps in one eb function calls.
