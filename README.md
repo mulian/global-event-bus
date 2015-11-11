@@ -2,12 +2,12 @@
 geb is an abnormal and great EventBus for Javascript Web/Node.
 
 # Short introduction
-## Definition
+* Definition
 ```javascript
 var f = function(arg) {console.log("hello "+arg);};
 eb.eb('testCase.firstCase.test',f);
 ```
-## Run
+* Run
 ```javascript
 eb.testCase.firstCase.test('there');
 // will print: 'hello there'
