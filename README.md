@@ -30,7 +30,7 @@ Use the Browserify `boundle.js` in folder `node_modules/geb/lib/boundle.js`
 ```
 Now `eb` is globally (on window) available.
 
-## eb
+## eb()
 
 ### Function definition
 * parameter {Object}: adds Option to Domain and functions
@@ -43,6 +43,10 @@ Without domain (String): add to current domain
 Without function: add domain and/or option
 
 Only Object: adds option to current domain
+
+You could add more then one function to damain.
+* The `thisArg` option on create a function will be used on call, not the domain `thisArg`.
+* The domain `thisArg` will only be used, if there is no `thisArg` on function create.
 
 ### Function examples
 ```javascript
