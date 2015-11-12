@@ -27,6 +27,35 @@ describe 'Will define', ->
     expect(obj.attribute).toBe 'test'
     eb.test1.test1()
     expect(obj.attribute).toBe 'yes'
+  it 'add many domains only one execute', ->
+    obj =
+      attribute: 'test'
+      call: ->
+        @attribute = 'yes'
+
+    eb.eb { thisArg: obj }, 'test1.test1', obj.call
+    eb.eb 'test2.test2', obj.call
+    eb.eb 'test3.test', obj.call
+    eb.eb 'test4.test', obj.call
+    eb.eb 'test5.test', obj.call
+    eb.eb 'test6.test', obj.call
+    eb.eb 'test7.test', obj.call
+    eb.eb 'test', {} =
+      thisArg: obj
+      f1: obj.call
+      f2: obj.call
+      f3: obj.call
+      f4: obj.call
+      f5: obj.call
+
+    eb.test2.test2()
+    expect(obj.attribute).toBe 'test'
+    eb.test1.test1()
+    expect(obj.attribute).toBe 'yes'
+
+    expect(eb.test7.test().length).toBe 1
+    expect(eb.test.f3().length).toBe 1
+
   it 'rm domain', ->
     obj = func: ->
       'hello'
