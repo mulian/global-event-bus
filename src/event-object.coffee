@@ -78,6 +78,31 @@ class EventObject
       else if opt instanceof Function
         # @ = new EventObject if not @[domain]?
         @___createFunction key,opt,options
+      else if key == 'instance' and (opt instanceof Object or opt instanceof Array)
+        @___createInstance opt
+      else
+        console.log "what do to with option[#{key}]=",opt if eb?.debug
+  ___createInstance: (instance) ->
+    console.log "___createInstance with ",instance
+    if instance instanceof Array
+      for i in instance
+        @___createInstance i
+    if instance.domain?
+      obj = @___createDomainIfNotExist(instance.domain)
+      delete instance.domain
+      return obj.obj.___createInstance instance
+    for fName in instance.watch
+      @[fName] = @___tmpFunction fName,instance
+  ___tmpFunction: (fName,instance) ->
+    console.log "___tmpFunction with ",fName,instance
+    return (args...) ->
+      @___removeAllSub()
+      ins = instance.create()
+      console.info "watch: ",instance.watch
+      for fName in instance.watch
+        console.info "function #{fName}"
+        @___createFunction(fName,ins[fName],{thisArg:ins})
+      return @[fName].apply null,args
 
   ___setFunctionToDomain: (subDomain) -> #@==EventObject.___
     if not @[subDomain]?

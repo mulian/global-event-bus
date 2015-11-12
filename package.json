@@ -37,5 +37,8 @@
   "scripts": {
     "docco": "docco ./src/*.coffee",
     "test": "jasmine spec/define-spec"
+  },
+  "coffeelintConfig": {
+    "max_line_length": 120
   }
 }

@@ -116,3 +116,43 @@ You could add more then one function to damain.
   // will only log 'Hello from obj1', the if object checks the thisArg object
   eb.eb({if:{id:1}}).test()
 ```
+
+### Instantiate Object on call
+Instantiate Objects only when you need them. For better startup-time.
+
+`test-object.coffee`
+```coffeescript
+module.exports =
+class Test
+  constructor: (@info) ->
+    @geb = 'geb'
+  call: (arg) ->
+    console.log "#{@geb} #{@info} #{arg}"
+  setInfo: (@info) ->
+```
+example1.js normal -> lazy startup-time
+```javascript
+var TestObject = require('./test-object')
+var instance = new TestObject('hello')
+eb.eb('test',{
+  thisArg: instance,
+  call: instance.call,
+  setInfo: instance.setInfo
+});
+eb.test.call('world'); //print: geb hello world
+```
+example1.js new -> better startup-time
+```javascript
+eb.eb('test',{
+  instance: {
+    watch: ['call','setInfo'],
+    create: function() {
+      var TestObject = require('./test-object');
+      return new TestObject('hello');
+    }
+  }
+});
+eb.test.call('world'); //print: geb hello world
+// will instantiate Test (with readFile...) after call
+// and execute call
+```

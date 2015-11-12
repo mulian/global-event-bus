@@ -67,7 +67,7 @@
   gulp.task('coffee_lint', function() {
     return gulp.src('./src/*.coffee').pipe(sourcemaps.init({
       loadMaps: true
-    })).pipe(coffeelint()).pipe(coffeelint.reporter());
+    })).pipe(coffeelint("package.json")).pipe(coffeelint.reporter());
   });
 
   gulp.task('coffee_browserify', function() {
@@ -87,7 +87,7 @@
     })).pipe(sourcemaps.write("./")).pipe(connect.reload()).pipe(gulp.dest('./lib/'));
   });
 
-  gulp.task('default', ['server', 'watch']);
+  gulp.task('default', ['coffee_browserify', 'coffee', 'server', 'watch']);
 
   gulp.task('coffee', function() {
     return gulp.src('./src/*.coffee').pipe(sourcemaps.init({

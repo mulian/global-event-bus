@@ -70,7 +70,7 @@ gulp.task 'coffee_lint', ->
   gulp.src './src/*.coffee'
     .pipe sourcemaps.init {} =
       loadMaps: true
-    .pipe coffeelint()
+    .pipe coffeelint "package.json"
     .pipe coffeelint.reporter()
     # .on('error', gutil.log('NO BUILD'))
 
@@ -95,7 +95,7 @@ gulp.task 'coffee_browserify', ->
     .pipe connect.reload()
     .pipe gulp.dest('./lib/')
 
-gulp.task 'default', ['server','watch']
+gulp.task 'default', ['coffee_browserify','coffee','server','watch']
 
 #### Maby use later?
 

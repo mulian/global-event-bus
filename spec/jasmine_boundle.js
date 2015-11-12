@@ -195,22 +195,71 @@
           results.push(this.___ebIf(opt));
         } else if (opt instanceof Function) {
           results.push(this.___createFunction(key, opt, options));
+        } else if (key === 'instance' && (opt instanceof Object || opt instanceof Array)) {
+          results.push(this.___createInstance(opt));
         } else {
-          results.push(void 0);
+          if (typeof eb !== "undefined" && eb !== null ? eb.debug : void 0) {
+            results.push(console.log("what do to with option[" + key + "]=", opt));
+          } else {
+            results.push(void 0);
+          }
         }
       }
       return results;
     };
 
+    EventObject.prototype.___createInstance = function(instance) {
+      var fName, i, j, l, len, len1, obj, ref, results;
+      console.log("___createInstance with ", instance);
+      if (instance instanceof Array) {
+        for (j = 0, len = instance.length; j < len; j++) {
+          i = instance[j];
+          this.___createInstance(i);
+        }
+      }
+      if (instance.domain != null) {
+        obj = this.___createDomainIfNotExist(instance.domain);
+        delete instance.domain;
+        return obj.obj.___createInstance(instance);
+      }
+      ref = instance.watch;
+      results = [];
+      for (l = 0, len1 = ref.length; l < len1; l++) {
+        fName = ref[l];
+        results.push(this[fName] = this.___tmpFunction(fName, instance));
+      }
+      return results;
+    };
+
+    EventObject.prototype.___tmpFunction = function(fName, instance) {
+      console.log("___tmpFunction with ", fName, instance);
+      return function() {
+        var args, ins, j, len, ref;
+        args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+        this.___removeAllSub();
+        ins = instance.create();
+        console.info("watch: ", instance.watch);
+        ref = instance.watch;
+        for (j = 0, len = ref.length; j < len; j++) {
+          fName = ref[j];
+          console.info("function " + fName);
+          this.___createFunction(fName, ins[fName], {
+            thisArg: ins
+          });
+        }
+        return this[fName].apply(null, args);
+      };
+    };
+
     EventObject.prototype.___setFunctionToDomain = function(subDomain) {
       if (this[subDomain] == null) {
         return this[subDomain] = function() {
-          var args, func, i, len, ref, ret;
+          var args, func, j, len, ref, ret;
           args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
           ret = [];
           ref = this.___functions[subDomain];
-          for (i = 0, len = ref.length; i < len; i++) {
-            func = ref[i];
+          for (j = 0, len = ref.length; j < len; j++) {
+            func = ref[j];
             ret.push(func.apply(this, args));
           }
           if (this.____ebIf != null) {
@@ -482,12 +531,77 @@ describe('ThisArg Test', function() {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
 },{"../lib/event-bus":1}],5:[function(require,module,exports){
+(function (global){
+var EventBus;
+
+EventBus = require('../lib/event-bus');
+
+describe('Instance Test', function() {
+  beforeEach(function() {
+    return global.eb = new EventBus;
+  });
+  it('standart instance', function() {
+    var TestObject, instance;
+    TestObject = require('./test-object.coffee');
+    instance = new TestObject('hello');
+    eb.eb('test', {
+      thisArg: instance,
+      call: instance.call,
+      setInfo: instance.setInfo
+    });
+    expect(eb.test.call instanceof Function).toBe(true);
+    return expect(eb.test.call('world')).toContain('hello world');
+  });
+  return it('instance on call', function() {
+    eb.eb({
+      instance: {
+        domain: 'test',
+        watch: ['call', 'setInfo'],
+        create: function() {
+          var TestObject;
+          TestObject = require('./test-object.coffee');
+          return new TestObject('hello');
+        }
+      }
+    });
+    expect(eb.test.call instanceof Function).toBe(true);
+    return expect(eb.test.call('world')).toContain('hello world');
+  });
+});
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+
+},{"../lib/event-bus":1,"./test-object.coffee":7}],6:[function(require,module,exports){
 require('./default_spec.coffee');
 
 require('./define_spec.coffee');
 
+require('./instance_spec.coffee');
 
-},{"./default_spec.coffee":3,"./define_spec.coffee":4}]},{},[5])
+
+},{"./default_spec.coffee":3,"./define_spec.coffee":4,"./instance_spec.coffee":5}],7:[function(require,module,exports){
+var Test;
+
+module.exports = Test = (function() {
+  function Test(info) {
+    this.info = info;
+  }
+
+  Test.prototype.call = function(arg) {
+    return this.info + " " + arg;
+  };
+
+  Test.prototype.setInfo = function(info) {
+    this.info = info;
+  };
+
+  return Test;
+
+})();
+
+
+},{}]},{},[6])
 
 
 //# sourceMappingURL=jasmine_boundle.js.map
