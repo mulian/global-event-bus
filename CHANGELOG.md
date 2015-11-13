@@ -1,6 +1,10 @@
 ## - next Version
 * add once (option) for thisArg to use it only once
 
+## 0.2.0 - Instantiate on call
+* Instantiate Object on call for better start-up-time
+* hide core functions on ___
+
 ## 0.1.2 - bugfix
 * bug 'every function saved in one object' fixed
 

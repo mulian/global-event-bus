@@ -1,6 +1,10 @@
 # geb (global-event-bus)
 geb is an abnormal and great EventBus for Javascript Web/Node.
 
+# Features
+* Instantiate Object on call for better start-up-time
+* Better overview
+
 # Short simple introduction
 * Definition
 ```javascript
@@ -125,12 +129,11 @@ Instantiate Objects only when you need them. For better startup-time.
 module.exports =
 class Test
   constructor: (@info) ->
-    @geb = 'geb'
   call: (arg) ->
     console.log "#{@geb} #{@info} #{arg}"
   setInfo: (@info) ->
 ```
-example1.js normal -> lazy startup-time
+`example1.js` normal (lazy startup-time)
 ```javascript
 var TestObject = require('./test-object')
 var instance = new TestObject('hello')
@@ -139,9 +142,9 @@ eb.eb('test',{
   call: instance.call,
   setInfo: instance.setInfo
 });
-eb.test.call('world'); //print: geb hello world
+eb.test.call('world'); //print: hello world
 ```
-example1.js new -> better startup-time
+`example1.js` **instance on call** (better startup-time)
 ```javascript
 eb.eb('test',{
   instance: {
@@ -152,7 +155,7 @@ eb.eb('test',{
     }
   }
 });
-eb.test.call('world'); //print: geb hello world
+eb.test.call('world'); //print: hello world
 // will instantiate Test (with readFile...) after call
 // and execute call
 ```

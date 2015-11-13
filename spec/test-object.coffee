@@ -6,3 +6,4 @@ class TestObject
     # console.info "TestObject call"
     return "#{@info} #{arg}"
   setInfo: (@info) ->
+    return @info

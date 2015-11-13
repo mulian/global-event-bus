@@ -20,27 +20,30 @@ module.exports =
         delete @eo[key] if obj.eb instanceof Function or obj instanceof Function
 
   instance : {} =
-    createInstance: (instance) ->
-      console.log "createInstance with ",instance
-      if instance instanceof Array
-        for i in instance
+    createInstance: (iObj) ->
+      if iObj instanceof Array
+        for i in iObj
           @createInstance i
-      if instance.domain?
-        obj = @createDomainIfNotExist(instance.domain)
-        delete instance.domain
-        return obj.obj.createInstance instance
-      for fName in instance.watch
-        @eo[fName] = @tmpFunction fName,instance
-    tmpFunction: (fName,instance) -> #@==EventObjectHiddenFunctions
-      console.log "tmpFunction with ",fName,instance
-      return (args...) ->#@==EventObject?
-        @___.removeAllSub()
-        ins = instance.create()
-        console.info "watch: ",instance.watch
-        for fName in instance.watch
-          console.info "function #{fName}"
-          @___.createFunction(fName,ins[fName],{thisArg:ins})
-        return @[fName].apply null,args
+      else if iObj.domain?
+        {obj} = @createDomainIfNotExist(iObj.domain)
+        delete iObj.domain
+        return obj.___.createInstance iObj
+      else # now we are on right domain:
+        for wItem in iObj.watch
+          @eo[wItem] = @callToCreate wItem,iObj
+          # @eo[wItem] = (args...) -> #@==EventObject
+          #   @___.initInstance(iObj)
+          #   @[wItem].apply @,args
+    callToCreate: (fName,iObj) -> #@==EventObject
+      return (args...) ->
+        @___.initInstance(iObj)
+        return @[fName].apply @,args
+    initInstance: (iObj) ->
+      @removeAllSub()
+      instance = iObj.create()
+      @eo.thisArg = instance
+      for wItem in iObj.watch
+        @createFunction wItem,instance[wItem],{thisArg:instance}
 
   addFunctions : {} =
     setFunctionToDomain: (subDomain) -> #@==EventObjectHiddenFunctions
@@ -53,7 +56,7 @@ module.exports =
           delete @___._ebIf if @___._ebIf?
           return ret
     createFunction: (subDomain,func,option) -> #@==EventObjectHiddenFunctions
-      console.log "createFunction subDomain:#{subDomain} func:",func if eb?.debug
+      console.info "createFunction subDomain:#{subDomain} func:",func if eb?.debug
       @functions[subDomain] = [] if not @functions[subDomain]?
 
       @functions[subDomain].push (args...) -> #@==EventObject
